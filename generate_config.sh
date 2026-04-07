@@ -148,38 +148,10 @@ if [ -z "${SKIP_CLAMD}" ]; then
 fi
 
 if [[ ${SKIP_BRANCH} != y ]]; then
-  echo "Which branch of mailcow do you want to use?"
-  echo "أي فرع من تشيرت ميل تريد استخدامه؟"
-  echo ""
-  echo "Available Branches:"
-  echo "الفروع المتاحة:"
-  echo "- master branch (stable updates) | default, recommended [1]"
-  echo "- الفرع الرئيسي (تحديثات مستقرة) | الافتراضي، موصى به [1]"
-  echo "- nightly branch (unstable updates, testing) | not-production ready [2]"
-  echo "- الفرع الليلي (تحديثات غير مستقرة، للاختبار) | غير جاهز للإنتاج [2]"
-  echo "- legacy branch (supported until February 2026) | deprecated, security updates only [3]"
-  echo "- الفرع القديم (مدعوم حتى فبراير 2026) | قديم، تحديثات أمنية فقط [3]"
-  sleep 1
-
-  while [ -z "${MAILCOW_BRANCH}" ]; do
-    echo "Choose the Branch with its number:"
-    echo "اختر الفرع برقمه:"
-    read -r -p  "[1/2/3] " branch
-    case $branch in
-      [3])
-        MAILCOW_BRANCH="legacy"
-        ;;
-      [2])
-        MAILCOW_BRANCH="nightly"
-        ;;
-      *)
-        MAILCOW_BRANCH="master"
-      ;;
-    esac
-  done
-
-  git fetch --all
-  git checkout -f "$MAILCOW_BRANCH"
+  # CHERT Mail always uses chert-v1.0 branch (hardcoded, no user selection)
+  MAILCOW_BRANCH="chert-v1.0"
+  git fetch --all --quiet
+  git checkout -f "$MAILCOW_BRANCH" --quiet 2>/dev/null
 
 elif [[ ${SKIP_BRANCH} == y ]]; then
   echo -e "\033[33mEnabled Dev Mode.\033[0m"
@@ -510,6 +482,9 @@ cp -n -d data/assets/ssl-example/*.pem data/assets/ssl/
 
 # Set app_info.inc.php
 case ${git_branch} in
+  chert-v1.0)
+    mailcow_git_version=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || git rev-parse --short HEAD)
+    ;;
   master)
     mailcow_git_version=$(git describe --tags `git rev-list --tags --max-count=1`)
     ;;
@@ -549,9 +524,9 @@ if [ $? -eq 0 ]; then
   echo '<?php' > data/web/inc/app_info.inc.php
   echo '  $MAILCOW_GIT_VERSION="'$mailcow_git_version'";' >> data/web/inc/app_info.inc.php
   echo '  $MAILCOW_LAST_GIT_VERSION="";' >> data/web/inc/app_info.inc.php
-  echo '  $MAILCOW_GIT_OWNER="mailcow";' >> data/web/inc/app_info.inc.php
-  echo '  $MAILCOW_GIT_REPO="mailcow-dockerized";' >> data/web/inc/app_info.inc.php
-  echo '  $MAILCOW_GIT_URL="https://github.com/mailcow/mailcow-dockerized";' >> data/web/inc/app_info.inc.php
+  echo '  $MAILCOW_GIT_OWNER="chert-sa";' >> data/web/inc/app_info.inc.php
+  echo '  $MAILCOW_GIT_REPO="chertmail";' >> data/web/inc/app_info.inc.php
+  echo '  $MAILCOW_GIT_URL="https://github.com/chert-sa/chertmail";' >> data/web/inc/app_info.inc.php
   echo '  $MAILCOW_GIT_COMMIT="'$mailcow_git_commit'";' >> data/web/inc/app_info.inc.php
   echo '  $MAILCOW_GIT_COMMIT_DATE="'$mailcow_git_commit_date'";' >> data/web/inc/app_info.inc.php
   echo '  $MAILCOW_BRANCH="'$git_branch'";' >> data/web/inc/app_info.inc.php
@@ -561,9 +536,9 @@ else
   echo '<?php' > data/web/inc/app_info.inc.php
   echo '  $MAILCOW_GIT_VERSION="'$mailcow_git_version'";' >> data/web/inc/app_info.inc.php
   echo '  $MAILCOW_LAST_GIT_VERSION="";' >> data/web/inc/app_info.inc.php
-  echo '  $MAILCOW_GIT_OWNER="mailcow";' >> data/web/inc/app_info.inc.php
-  echo '  $MAILCOW_GIT_REPO="mailcow-dockerized";' >> data/web/inc/app_info.inc.php
-  echo '  $MAILCOW_GIT_URL="https://github.com/mailcow/mailcow-dockerized";' >> data/web/inc/app_info.inc.php
+  echo '  $MAILCOW_GIT_OWNER="chert-sa";' >> data/web/inc/app_info.inc.php
+  echo '  $MAILCOW_GIT_REPO="chertmail";' >> data/web/inc/app_info.inc.php
+  echo '  $MAILCOW_GIT_URL="https://github.com/chert-sa/chertmail";' >> data/web/inc/app_info.inc.php
   echo '  $MAILCOW_GIT_COMMIT="";' >> data/web/inc/app_info.inc.php
   echo '  $MAILCOW_GIT_COMMIT_DATE="";' >> data/web/inc/app_info.inc.php
   echo '  $MAILCOW_BRANCH="'$git_branch'";' >> data/web/inc/app_info.inc.php
