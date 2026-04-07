@@ -148,8 +148,8 @@ if [ -z "${SKIP_CLAMD}" ]; then
 fi
 
 if [[ ${SKIP_BRANCH} != y ]]; then
-  # CHERT Mail always uses chert-v1.0 branch (hardcoded, no user selection)
-  MAILCOW_BRANCH="chert-v1.0"
+  # CHERT Mail always uses chert-v1.1 branch (hardcoded, no user selection)
+  MAILCOW_BRANCH="chert-v1.1"
   git fetch --all --quiet
   git checkout -f "$MAILCOW_BRANCH" --quiet 2>/dev/null
 
@@ -482,7 +482,7 @@ cp -n -d data/assets/ssl-example/*.pem data/assets/ssl/
 
 # Set app_info.inc.php
 case ${git_branch} in
-  chert-v1.0)
+  chert-v1.1)
     mailcow_git_version=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || git rev-parse --short HEAD)
     ;;
   master)
