@@ -3,8 +3,10 @@
 !data/conf/nginx/site.conf
 !/**/.gitkeep
 *.iml
+*.bak
 .idea
 .vscode/*
+.claude/
 data/assets/ssl-example/*
 data/assets/ssl/*
 data/conf/borgmatic/
@@ -43,14 +45,10 @@ data/conf/postfix/dnsbl_reply.map
 data/conf/rspamd/custom/*
 data/conf/rspamd/local.d/*
 data/conf/rspamd/override.d/*
-data/conf/sogo/custom-theme.js
 data/conf/sogo/plist_ldap
 data/conf/sogo/plist_ldap.sh
 data/conf/sogo/sieve.creds
 data/conf/sogo/cron.creds
-data/conf/sogo/custom-fulllogo.svg
-data/conf/sogo/custom-shortlogo.svg
-data/conf/sogo/custom-fulllogo.png
 data/conf/acme/dns-01.conf
 data/gitea/
 data/gogs/
