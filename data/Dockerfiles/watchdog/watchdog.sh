@@ -159,7 +159,7 @@ function notify_error() {
         log_msg "Sent notification email to ${rcpt}"
       else
         if [[ "${SMTP_VERBOSE}" == "" ]]; then
-          log_msg "Error while sending notification email to ${rcpt}. You can enable verbose logging by setting 'WATCHDOG_VERBOSE=y' in mailcow.conf."
+          log_msg "Error while sending notification email to ${rcpt}. You can enable verbose logging by setting 'WATCHDOG_VERBOSE=y' in chertmail.conf."
         else
           log_msg "Error while sending notification email to ${rcpt}."
         fi

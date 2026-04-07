@@ -194,10 +194,10 @@ EOF
 
 # 3) Main wrapper for generate_config.sh and update.sh
 configure_ipv6() {
-  # detect manual override if mailcow.conf is present
-  if [[ -n "$MAILCOW_CONF" && -f "$MAILCOW_CONF" ]] && grep -q '^ENABLE_IPV6=' "$MAILCOW_CONF"; then
-    MANUAL_SETTING=$(grep '^ENABLE_IPV6=' "$MAILCOW_CONF" | cut -d= -f2)
-  elif [[ -z "$MAILCOW_CONF" ]] && [[ -n "${ENABLE_IPV6:-}" ]]; then
+  # detect manual override if chertmail.conf is present
+  if [[ -n "$CHERTMAIL_CONF" && -f "$CHERTMAIL_CONF" ]] && grep -q '^ENABLE_IPV6=' "$CHERTMAIL_CONF"; then
+    MANUAL_SETTING=$(grep '^ENABLE_IPV6=' "$CHERTMAIL_CONF" | cut -d= -f2)
+  elif [[ -z "$CHERTMAIL_CONF" ]] && [[ -n "${ENABLE_IPV6:-}" ]]; then
     MANUAL_SETTING="$ENABLE_IPV6"
   else
     MANUAL_SETTING=""
@@ -207,11 +207,11 @@ configure_ipv6() {
 
   # if user manually set it, check for mismatch
   if [[ "$DETECTED_IPV6" != "true" ]]; then
-    if [[ -n "$MAILCOW_CONF" && -f "$MAILCOW_CONF" ]]; then
-      if grep -q '^ENABLE_IPV6=' "$MAILCOW_CONF"; then
-        sed -i 's/^ENABLE_IPV6=.*/ENABLE_IPV6=false/' "$MAILCOW_CONF"
+    if [[ -n "$CHERTMAIL_CONF" && -f "$CHERTMAIL_CONF" ]]; then
+      if grep -q '^ENABLE_IPV6=' "$CHERTMAIL_CONF"; then
+        sed -i 's/^ENABLE_IPV6=.*/ENABLE_IPV6=false/' "$CHERTMAIL_CONF"
       else
-        echo "ENABLE_IPV6=false" >> "$MAILCOW_CONF"
+        echo "ENABLE_IPV6=false" >> "$CHERTMAIL_CONF"
       fi
     else
       export IPV6_BOOL=false
@@ -225,11 +225,11 @@ configure_ipv6() {
 
   docker_daemon_edit
 
-  if [[ -n "$MAILCOW_CONF" && -f "$MAILCOW_CONF" ]]; then
-    if grep -q '^ENABLE_IPV6=' "$MAILCOW_CONF"; then
-      sed -i 's/^ENABLE_IPV6=.*/ENABLE_IPV6=true/' "$MAILCOW_CONF"
+  if [[ -n "$CHERTMAIL_CONF" && -f "$CHERTMAIL_CONF" ]]; then
+    if grep -q '^ENABLE_IPV6=' "$CHERTMAIL_CONF"; then
+      sed -i 's/^ENABLE_IPV6=.*/ENABLE_IPV6=true/' "$CHERTMAIL_CONF"
     else
-      echo "ENABLE_IPV6=true" >> "$MAILCOW_CONF"
+      echo "ENABLE_IPV6=true" >> "$CHERTMAIL_CONF"
     fi
   else
     export IPV6_BOOL=true

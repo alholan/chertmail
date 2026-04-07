@@ -115,7 +115,7 @@ fi
 }
 
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-source "${SCRIPT_DIR}/../mailcow.conf"
+source "${SCRIPT_DIR}/../chertmail.conf"
 COMPOSE_FILE="${SCRIPT_DIR}/../docker-compose.yml"
 CMPS_PRJ=$(echo ${COMPOSE_PROJECT_NAME} | tr -cd '0-9A-Za-z-_')
 SQLIMAGE=$(grep -iEo '(mysql|mariadb)\:.+' "${COMPOSE_FILE}")

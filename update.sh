@@ -3,19 +3,19 @@
 ############## Begin Function Section ##############
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-MAILCOW_CONF="${SCRIPT_DIR}/mailcow.conf"
+CHERTMAIL_CONF="${SCRIPT_DIR}/chertmail.conf"
 
-# Ensure the script is run from the directory that contains mailcow.conf
-if [ ! -f "${PWD}/mailcow.conf" ]; then
-  if [ -f "${SCRIPT_DIR}/mailcow.conf" ]; then
-    echo -e "\e[33mPlease run this script directly from the mailcow installation directory:\e[0m"
+# Ensure the script is run from the directory that contains chertmail.conf
+if [ ! -f "${PWD}/chertmail.conf" ]; then
+  if [ -f "${SCRIPT_DIR}/chertmail.conf" ]; then
+    echo -e "\e[33mPlease run this script directly from the CHERT Mail installation directory:\e[0m"
     echo -e "\e[33mيرجى تشغيل هذا السكربت مباشرة من مجلد تثبيت تشيرت ميل:\e[0m"
     echo -e "  \e[36mcd ${SCRIPT_DIR} && ./update.sh\e[0m"
     exit 1
   else
-    echo -e "\e[31mmailcow.conf not found in current directory or script directory (\e[36m${SCRIPT_DIR}\e[31m).\e[0m"
-    echo -e "\e[31mلم يتم العثور على mailcow.conf في المجلد الحالي أو مجلد السكربت (\e[36m${SCRIPT_DIR}\e[31m).\e[0m"
-    echo -e "\e[33mRun this script directly from your mailcow installation directory.\e[0m"
+    echo -e "\e[31mchertmail.conf not found in current directory or script directory (\e[36m${SCRIPT_DIR}\e[31m).\e[0m"
+    echo -e "\e[31mلم يتم العثور على chertmail.conf في المجلد الحالي أو مجلد السكربت (\e[36m${SCRIPT_DIR}\e[31m).\e[0m"
+    echo -e "\e[33mRun this script directly from your CHERT Mail installation directory.\e[0m"
     echo -e "\e[33mقم بتشغيل هذا السكربت مباشرة من مجلد تثبيت تشيرت ميل.\e[0m"
     exit 1
   fi
@@ -217,10 +217,10 @@ while (($#)); do
   shift
 done
 
-[[ ! -f mailcow.conf ]] && { echo -e "\e[31mmailcow.conf is missing! Is mailcow installed?\e[0m"; echo -e "\e[31mملف mailcow.conf مفقود! هل تم تثبيت تشيرت ميل؟\e[0m"; exit 1;}
+[[ ! -f chertmail.conf ]] && { echo -e "\e[31mchertmail.conf is missing! Is CHERT Mail installed?\e[0m"; echo -e "\e[31mملف chertmail.conf مفقود! هل تم تثبيت تشيرت ميل؟\e[0m"; exit 1;}
 
-chmod 600 mailcow.conf
-source mailcow.conf
+chmod 600 chertmail.conf
+source chertmail.conf
 
 get_compose_type
 
@@ -518,7 +518,7 @@ $COMPOSE_COMMAND pull
 cp -n -d data/assets/ssl-example/*.pem data/assets/ssl/
 
 echo -e "Checking IPv6 settings... "
-if grep -q 'SYSCTL_IPV6_DISABLED=1' mailcow.conf; then
+if grep -q 'SYSCTL_IPV6_DISABLED=1' chertmail.conf; then
   echo
   echo '!! IMPORTANT !!'
   echo
@@ -531,7 +531,7 @@ if grep -q 'SYSCTL_IPV6_DISABLED=1' mailcow.conf; then
 fi
 
 # Checking for old project name bug
-sed -i --follow-symlinks 's#COMPOSEPROJECT_NAME#COMPOSE_PROJECT_NAME#g' mailcow.conf
+sed -i --follow-symlinks 's#COMPOSEPROJECT_NAME#COMPOSE_PROJECT_NAME#g' chertmail.conf
 
 # Fix Rspamd maps
 if [ -f data/conf/rspamd/custom/global_from_blacklist.map ]; then

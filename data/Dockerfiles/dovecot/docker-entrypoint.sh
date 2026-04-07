@@ -232,7 +232,7 @@ mail_replica = tcp:${MAILCOW_REPLICA_IP}:${DOVEADM_REPLICA_PORT}
 EOF
 fi
 
-# Setting variables for indexer-worker inside fts.conf automatically according to mailcow.conf settings
+# Setting variables for indexer-worker inside fts.conf automatically according to chertmail.conf settings
 if [[ "${SKIP_FTS}" =~ ^([nN][oO]|[nN])+$ ]]; then
   echo -e "\e[94mConfiguring FTS Settings...\e[0m"
   echo -e "\e[94mSetting FTS Memory Limit (per process) to ${FTS_HEAP} MB\e[0m"

@@ -91,7 +91,7 @@ echo "Using ${BACKUP_LOCATION} as backup/restore location."
 echo "استخدام ${BACKUP_LOCATION} كموقع للنسخ الاحتياطي/الاستعادة."
 echo
 
-source ${SCRIPT_DIR}/../mailcow.conf
+source ${SCRIPT_DIR}/../chertmail.conf
 
 if [[ -z ${COMPOSE_PROJECT_NAME} ]]; then
   echo "Could not determine compose project name"
@@ -151,7 +151,7 @@ function backup() {
   DATE=$(date +"%Y-%m-%d-%H-%M-%S")
   mkdir -p "${BACKUP_LOCATION}/mailcow-${DATE}"
   chmod 755 "${BACKUP_LOCATION}/mailcow-${DATE}"
-  cp "${SCRIPT_DIR}/../mailcow.conf" "${BACKUP_LOCATION}/mailcow-${DATE}"
+  cp "${SCRIPT_DIR}/../chertmail.conf" "${BACKUP_LOCATION}/mailcow-${DATE}"
   touch "${BACKUP_LOCATION}/mailcow-${DATE}/.$ARCH"
   for bin in docker; do
   if [[ -z $(which ${bin}) ]]; then
@@ -253,7 +253,7 @@ function restore() {
     COMPOSE_COMMAND="docker-compose"
 
   else
-    echo -e "\e[31mCan not read DOCKER_COMPOSE_VERSION variable from mailcow.conf! Is your mailcow up to date? Exiting...\e[0m"
+    echo -e "\e[31mCan not read DOCKER_COMPOSE_VERSION variable from chertmail.conf! Is your mailcow up to date? Exiting...\e[0m"
     exit 1
   fi
 
@@ -375,13 +375,13 @@ function restore() {
         echo "Could not determine SQL image version, skipping restore..."
         shift
         continue
-      elif [ ! -f "${RESTORE_LOCATION}/mailcow.conf" ]; then
-        echo "Could not find the corresponding mailcow.conf in ${RESTORE_LOCATION}, skipping restore."
-        echo "If you lost that file, copy the last working mailcow.conf file to ${RESTORE_LOCATION} and restart the restore process."
+      elif [ ! -f "${RESTORE_LOCATION}/chertmail.conf" ]; then
+        echo "Could not find the corresponding chertmail.conf in ${RESTORE_LOCATION}, skipping restore."
+        echo "If you lost that file, copy the last working chertmail.conf file to ${RESTORE_LOCATION} and restart the restore process."
         shift
         continue
       else
-        read -p "mailcow will be stopped and the currently active mailcow.conf will be modified to use the DB parameters found in ${RESTORE_LOCATION}/mailcow.conf - do you want to proceed? [Y|n] " MYSQL_STOP_MAILCOW
+        read -p "mailcow will be stopped and the currently active chertmail.conf will be modified to use the DB parameters found in ${RESTORE_LOCATION}/chertmail.conf - do you want to proceed? [Y|n] " MYSQL_STOP_MAILCOW
         if [[ ${MYSQL_STOP_MAILCOW,,} =~ ^(no|n|N)$ ]]; then
           echo "OK, skipped."
           shift
@@ -423,13 +423,13 @@ function restore() {
                 /bin/tar --use-compress-program='${DECOMPRESS_PROG}' -Pxvf /backup/${ARCHIVE_FILE}"
           fi
         fi
-        echo "Modifying mailcow.conf..."
-        source ${RESTORE_LOCATION}/mailcow.conf
-        sed -i --follow-symlinks "/DBNAME/c\DBNAME=${DBNAME}" ${SCRIPT_DIR}/../mailcow.conf
-        sed -i --follow-symlinks "/DBUSER/c\DBUSER=${DBUSER}" ${SCRIPT_DIR}/../mailcow.conf
-        sed -i --follow-symlinks "/DBPASS/c\DBPASS=${DBPASS}" ${SCRIPT_DIR}/../mailcow.conf
-        sed -i --follow-symlinks "/DBROOT/c\DBROOT=${DBROOT}" ${SCRIPT_DIR}/../mailcow.conf
-        source ${SCRIPT_DIR}/../mailcow.conf
+        echo "Modifying chertmail.conf..."
+        source ${RESTORE_LOCATION}/chertmail.conf
+        sed -i --follow-symlinks "/DBNAME/c\DBNAME=${DBNAME}" ${SCRIPT_DIR}/../chertmail.conf
+        sed -i --follow-symlinks "/DBUSER/c\DBUSER=${DBUSER}" ${SCRIPT_DIR}/../chertmail.conf
+        sed -i --follow-symlinks "/DBPASS/c\DBPASS=${DBPASS}" ${SCRIPT_DIR}/../chertmail.conf
+        sed -i --follow-symlinks "/DBROOT/c\DBROOT=${DBROOT}" ${SCRIPT_DIR}/../chertmail.conf
+        source ${SCRIPT_DIR}/../chertmail.conf
         echo "Starting mailcow..."
         ${COMPOSE_COMMAND} -f ${COMPOSE_FILE} --env-file ${ENV_FILE} up -d
         #docker start $(docker ps -aqf name=mysql-mailcow)

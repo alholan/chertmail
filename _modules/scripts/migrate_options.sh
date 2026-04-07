@@ -5,7 +5,7 @@
 
 migrate_config_options() {
 
-  sed -i --follow-symlinks '$a\' mailcow.conf
+  sed -i --follow-symlinks '$a\' chertmail.conf
 
   KEYS=(
     SOLR_HEAP
@@ -17,50 +17,50 @@ migrate_config_options() {
   )
 
   for key in "${KEYS[@]}"; do
-    if grep -q "${key}" mailcow.conf; then
+    if grep -q "${key}" chertmail.conf; then
       case "${key}" in
         SOLR_HEAP)
-          echo "Removing ${key} in mailcow.conf"
-          sed -i '/# Solr heap size in MB\b/d' mailcow.conf
-          sed -i '/# Solr is a prone to run\b/d' mailcow.conf
-          sed -i '/SOLR_HEAP\b/d' mailcow.conf
+          echo "Removing ${key} in chertmail.conf"
+          sed -i '/# Solr heap size in MB\b/d' chertmail.conf
+          sed -i '/# Solr is a prone to run\b/d' chertmail.conf
+          sed -i '/SOLR_HEAP\b/d' chertmail.conf
           ;;
         SKIP_SOLR)
-          echo "Removing ${key} in mailcow.conf"
-          sed -i '/\bSkip Solr on low-memory\b/d' mailcow.conf
-          sed -i '/\bSolr is disabled by default\b/d' mailcow.conf
-          sed -i '/\bDisable Solr or\b/d' mailcow.conf
-          sed -i '/\bSKIP_SOLR\b/d' mailcow.conf
+          echo "Removing ${key} in chertmail.conf"
+          sed -i '/\bSkip Solr on low-memory\b/d' chertmail.conf
+          sed -i '/\bSolr is disabled by default\b/d' chertmail.conf
+          sed -i '/\bDisable Solr or\b/d' chertmail.conf
+          sed -i '/\bSKIP_SOLR\b/d' chertmail.conf
           ;;
         SOLR_PORT)
-          echo "Removing ${key} in mailcow.conf"
-          sed -i '/\bSOLR_PORT\b/d' mailcow.conf
+          echo "Removing ${key} in chertmail.conf"
+          sed -i '/\bSOLR_PORT\b/d' chertmail.conf
           ;;
         FLATCURVE_EXPERIMENTAL)
-          echo "Removing ${key} in mailcow.conf"
-          sed -i '/\bFLATCURVE_EXPERIMENTAL\b/d' mailcow.conf
+          echo "Removing ${key} in chertmail.conf"
+          sed -i '/\bFLATCURVE_EXPERIMENTAL\b/d' chertmail.conf
           ;;
         DISABLE_IPv6)
-          echo "Migrating ${key} to ENABLE_IPv6 in mailcow.conf"
-          local old=$(grep '^DISABLE_IPv6=' "mailcow.conf" | cut -d'=' -f2)
+          echo "Migrating ${key} to ENABLE_IPv6 in chertmail.conf"
+          local old=$(grep '^DISABLE_IPv6=' "chertmail.conf" | cut -d'=' -f2)
           local new
           if [[ "$old" == "y" ]]; then
             new="false"
           else
             new="true"
           fi
-          sed -i '/^DISABLE_IPv6=/d' "mailcow.conf"
-          echo "ENABLE_IPV6=$new" >> "mailcow.conf"
+          sed -i '/^DISABLE_IPv6=/d' "chertmail.conf"
+          echo "ENABLE_IPV6=$new" >> "chertmail.conf"
           ;;
         ACME_CONTACT)
-          echo "Deleting obsoleted ${key} in mailcow.conf"
-          sed -i '/^# Lets Encrypt registration contact information/d' mailcow.conf
-          sed -i '/^# Optional: Leave empty for none/d' mailcow.conf
-          sed -i '/^# This value is only used on first order!/d' mailcow.conf
-          sed -i '/^# Setting it at a later point will require the following steps:/d' mailcow.conf
-          sed -i '/^# https:\/\/docs.mailcow.email\/troubleshooting\/debug-reset_tls\//d' mailcow.conf
-          sed -i '/^ACME_CONTACT=.*/d' mailcow.conf
-          sed -i '/^#ACME_CONTACT=.*/d' mailcow.conf
+          echo "Deleting obsoleted ${key} in chertmail.conf"
+          sed -i '/^# Lets Encrypt registration contact information/d' chertmail.conf
+          sed -i '/^# Optional: Leave empty for none/d' chertmail.conf
+          sed -i '/^# This value is only used on first order!/d' chertmail.conf
+          sed -i '/^# Setting it at a later point will require the following steps:/d' chertmail.conf
+          sed -i '/^# https:\/\/docs.mailcow.email\/troubleshooting\/debug-reset_tls\//d' chertmail.conf
+          sed -i '/^ACME_CONTACT=.*/d' chertmail.conf
+          sed -i '/^#ACME_CONTACT=.*/d' chertmail.conf
           ;;
       esac
     fi

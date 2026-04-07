@@ -47,7 +47,7 @@ get_compose_type(){
       COMPOSE_VERSION=native
       COMPOSE_COMMAND="docker compose"
       if [[ "$caller" == "update.sh" ]]; then
-        sed -i 's/^DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=native/' "$SCRIPT_DIR/mailcow.conf"
+        sed -i 's/^DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=native/' "$SCRIPT_DIR/chertmail.conf"
       fi
       echo -e "\e[33mFound Docker Compose Plugin (native).\e[0m"
       echo -e "\e[33mتم العثور على إضافة Docker Compose (native).\e[0m"
@@ -69,7 +69,7 @@ get_compose_type(){
       COMPOSE_VERSION=standalone
       COMPOSE_COMMAND="docker-compose"
       if [[ "$caller" == "update.sh" ]]; then
-        sed -i 's/^DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=standalone/' "$SCRIPT_DIR/mailcow.conf"
+        sed -i 's/^DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=standalone/' "$SCRIPT_DIR/chertmail.conf"
       fi
       echo -e "\e[33mFound Docker Compose Standalone.\e[0m"
       echo -e "\e[33mتم العثور على Docker Compose المستقل.\e[0m"
@@ -103,21 +103,21 @@ detect_bad_asn() {
     if [ -z "$SPAMHAUS_DQS_KEY" ]; then
       echo -e "\e[33mYour server's public IP uses an AS that is blocked by Spamhaus to use their DNS public blocklists for Postfix.\e[0m"
       echo -e "\e[33mعنوان IP العام لخادمك يستخدم AS محظوراً من قبل Spamhaus لاستخدام قوائم الحظر العامة لـ Postfix.\e[0m"
-      echo -e "\e[33mmailcow did not detected a value for the variable SPAMHAUS_DQS_KEY inside mailcow.conf!\e[0m"
-      echo -e "\e[33mتشيرت ميل لم يكتشف قيمة للمتغير SPAMHAUS_DQS_KEY في mailcow.conf!\e[0m"
+      echo -e "\e[33mmailcow did not detected a value for the variable SPAMHAUS_DQS_KEY inside chertmail.conf!\e[0m"
+      echo -e "\e[33mتشيرت ميل لم يكتشف قيمة للمتغير SPAMHAUS_DQS_KEY في chertmail.conf!\e[0m"
       sleep 2
       echo ""
       echo -e "\e[33mTo use the Spamhaus DNS Blocklists again, you will need to create a FREE account for their Data Query Service (DQS) at: https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account\e[0m"
       echo -e "\e[33mلاستخدام قوائم Spamhaus DNS مجدداً، ستحتاج إنشاء حساب مجاني لخدمة استعلام البيانات (DQS) على: https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account\e[0m"
-      echo -e "\e[33mOnce done, enter your DQS API key in mailcow.conf and mailcow will do the rest for you!\e[0m"
-      echo -e "\e[33mبعد الانتهاء، أدخل مفتاح DQS API في mailcow.conf وسيقوم تشيرت ميل بالباقي!\e[0m"
+      echo -e "\e[33mOnce done, enter your DQS API key in chertmail.conf and mailcow will do the rest for you!\e[0m"
+      echo -e "\e[33mبعد الانتهاء، أدخل مفتاح DQS API في chertmail.conf وسيقوم تشيرت ميل بالباقي!\e[0m"
       echo ""
       sleep 2
     else
       echo -e "\e[33mYour server's public IP uses an AS that is blocked by Spamhaus to use their DNS public blocklists for Postfix.\e[0m"
       echo -e "\e[33mعنوان IP العام لخادمك يستخدم AS محظوراً من قبل Spamhaus لاستخدام قوائم الحظر العامة لـ Postfix.\e[0m"
-      echo -e "\e[32mmailcow detected a Value for the variable SPAMHAUS_DQS_KEY inside mailcow.conf. Postfix will use DQS with the given API key...\e[0m"
-      echo -e "\e[32mتشيرت ميل اكتشف قيمة للمتغير SPAMHAUS_DQS_KEY في mailcow.conf. سيستخدم Postfix DQS مع مفتاح API المعطى...\e[0m"
+      echo -e "\e[32mmailcow detected a Value for the variable SPAMHAUS_DQS_KEY inside chertmail.conf. Postfix will use DQS with the given API key...\e[0m"
+      echo -e "\e[32mتشيرت ميل اكتشف قيمة للمتغير SPAMHAUS_DQS_KEY في chertmail.conf. سيستخدم Postfix DQS مع مفتاح API المعطى...\e[0m"
     fi
   elif [ "$response" -eq 200 ]; then
     echo -e "\e[33mCheck completed! Your IP is \e[32mclean\e[0m"

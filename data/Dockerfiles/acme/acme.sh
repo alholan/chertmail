@@ -412,7 +412,7 @@ while true; do
 
   if [[ -z ${VALIDATED_CERTIFICATES[*]} ]]; then
     log_f "Cannot validate any hostnames, skipping Let's Encrypt for 1 hour."
-    log_f "Use SKIP_LETS_ENCRYPT=y in mailcow.conf to skip it permanently."
+    log_f "Use SKIP_LETS_ENCRYPT=y in chertmail.conf to skip it permanently."
     ${REDIS_CMDLINE} SET ACME_FAIL_TIME "$(date +%s)"
     sleep 1h
     exec $(readlink -f "$0")

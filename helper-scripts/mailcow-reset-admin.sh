@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-[[ -f mailcow.conf ]] && source mailcow.conf
-[[ -f ../mailcow.conf ]] && source ../mailcow.conf
+[[ -f chertmail.conf ]] && source chertmail.conf
+[[ -f ../chertmail.conf ]] && source ../chertmail.conf
 
 if [[ -z ${DBUSER} ]] || [[ -z ${DBPASS} ]] || [[ -z ${DBNAME} ]]; then
-	echo "Cannot find mailcow.conf, make sure this script is run from within the mailcow folder."
-	echo "لم يتم العثور على mailcow.conf، تأكد من تشغيل هذا السكربت من داخل مجلد تشيرت ميل."
+	echo "Cannot find chertmail.conf, make sure this script is run from within the mailcow folder."
+	echo "لم يتم العثور على chertmail.conf، تأكد من تشغيل هذا السكربت من داخل مجلد تشيرت ميل."
 	exit 1
 fi
 

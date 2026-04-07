@@ -4,24 +4,24 @@
 # Resolve the directory this script lives in for consistent behavior when invoked from elsewhere
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" >/dev/null 2>&1 && pwd)"
 
-# Ensure script is executed in the mailcow installation directory by checking for a .env symlink that points to mailcow.conf
+# Ensure script is executed in the CHERT Mail installation directory by checking for a .env symlink that points to chertmail.conf
 if [ ! -L "${PWD}/.env" ]; then
-  echo -e "\e[33mPlease run this script from the mailcow installation directory.\e[0m"
+  echo -e "\e[33mPlease run this script from the CHERT Mail installation directory.\e[0m"
   echo -e "\e[33mيرجى تشغيل هذا السكربت من مجلد تثبيت تشيرت ميل.\e[0m"
-  echo -e "  \e[36mcd /path/to/mailcow && ./generate_config.sh\e[0m"
+  echo -e "  \e[36mcd /path/to/chertmail && ./generate_config.sh\e[0m"
   exit 1
 fi
 
-# Verify the .env symlink points to a mailcow.conf file
+# Verify the .env symlink points to a chertmail.conf file
 env_target="$(readlink -f "${PWD}/.env" 2>/dev/null || true)"
-if [ -z "$env_target" ] || [ "$(basename "$env_target")" != "mailcow.conf" ]; then
-  echo -e "\e[31mThe found .env symlink does not point to a mailcow.conf file.\e[0m"
-  echo -e "\e[31mالرابط الرمزي .env لا يشير إلى ملف mailcow.conf.\e[0m"
-  echo -e "\e[33mPlease create a symbolic link .env -> mailcow.conf inside the mailcow directory and run this script there.\e[0m"
-  echo -e "\e[33mيرجى إنشاء رابط رمزي .env -> mailcow.conf داخل مجلد تشيرت ميل وتشغيل السكربت من هناك.\e[0m"
-  echo -e "\e[33mNote: 'ln -s mailcow.conf .env' will create the symlink even if mailcow.conf does not yet exist.\e[0m"
-  echo -e "\e[33mملاحظة: الأمر 'ln -s mailcow.conf .env' سينشئ الرابط الرمزي حتى لو لم يكن ملف mailcow.conf موجوداً بعد.\e[0m"
-  echo -e "  \e[36mcd /path/to/mailcow && ln -s mailcow.conf .env && ./generate_config.sh\e[0m"
+if [ -z "$env_target" ] || [ "$(basename "$env_target")" != "chertmail.conf" ]; then
+  echo -e "\e[31mThe found .env symlink does not point to a chertmail.conf file.\e[0m"
+  echo -e "\e[31mالرابط الرمزي .env لا يشير إلى ملف chertmail.conf.\e[0m"
+  echo -e "\e[33mPlease create a symbolic link .env -> chertmail.conf inside the CHERT Mail directory and run this script there.\e[0m"
+  echo -e "\e[33mيرجى إنشاء رابط رمزي .env -> chertmail.conf داخل مجلد تشيرت ميل وتشغيل السكربت من هناك.\e[0m"
+  echo -e "\e[33mNote: 'ln -s chertmail.conf .env' will create the symlink even if chertmail.conf does not yet exist.\e[0m"
+  echo -e "\e[33mملاحظة: الأمر 'ln -s chertmail.conf .env' سينشئ الرابط الرمزي حتى لو لم يكن ملف chertmail.conf موجوداً بعد.\e[0m"
+  echo -e "  \e[36mcd /path/to/chertmail && ln -s chertmail.conf .env && ./generate_config.sh\e[0m"
   exit 1
 fi
 
@@ -53,14 +53,14 @@ else
   SKIP_BRANCH=n
 fi
 
-if [ -f mailcow.conf ]; then
+if [ -f chertmail.conf ]; then
   echo "A config file exists and will be overwritten, are you sure you want to continue?"
   echo "ملف الإعدادات موجود وسيتم استبداله، هل أنت متأكد من المتابعة؟"
   read -r -p "[y/N] " response
   case $response in
     [yY][eE][sS]|[yY])
-      mv mailcow.conf mailcow.conf_backup
-      chmod 600 mailcow.conf_backup
+      mv chertmail.conf chertmail.conf_backup
+      chmod 600 chertmail.conf_backup
       ;;
     *)
       exit 1
@@ -129,8 +129,8 @@ if [ -z "${SKIP_CLAMD}" ]; then
   if [ "${MEM_TOTAL}" -le "2621440" ]; then
     echo "Installed memory is <= 2.5 GiB. It is recommended to disable ClamAV to prevent out-of-memory situations."
     echo "الذاكرة المثبتة <= 2.5 جيجابايت. يُنصح بتعطيل ClamAV لمنع نفاد الذاكرة."
-    echo "ClamAV can be re-enabled by setting SKIP_CLAMD=n in mailcow.conf."
-    echo "يمكن إعادة تفعيل ClamAV بتعيين SKIP_CLAMD=n في ملف mailcow.conf."
+    echo "ClamAV can be re-enabled by setting SKIP_CLAMD=n in chertmail.conf."
+    echo "يمكن إعادة تفعيل ClamAV بتعيين SKIP_CLAMD=n في ملف chertmail.conf."
     echo "Do you want to disable ClamAV now?"
     echo "هل تريد تعطيل ClamAV الآن؟"
     read -r -p  "[Y/n] " response
@@ -204,9 +204,9 @@ configure_ipv6
 
 [ ! -f ./data/conf/rspamd/override.d/worker-controller-password.inc ] && echo '# Placeholder' > ./data/conf/rspamd/override.d/worker-controller-password.inc
 
-cat << EOF > mailcow.conf
+cat << EOF > chertmail.conf
 # ------------------------------
-# mailcow web ui configuration
+# CHERT Mail configuration
 # ------------------------------
 # example.org is _not_ a valid hostname, use a fqdn here.
 # Default admin user is "admin"
@@ -497,7 +497,7 @@ EOF
 
 mkdir -p data/assets/ssl
 
-chmod 600 mailcow.conf
+chmod 600 chertmail.conf
 
 # copy but don't overwrite existing certificate
 echo "Generating snake-oil certificate..."
