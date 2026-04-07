@@ -4,32 +4,21 @@
 # Resolve the directory this script lives in for consistent behavior when invoked from elsewhere
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" >/dev/null 2>&1 && pwd)"
 
-# Auto-create .env symlink if it doesn't exist (fresh installation)
-if [ ! -e "${PWD}/.env" ] && [ ! -L "${PWD}/.env" ]; then
+# Auto-create or fix .env symlink to point to chertmail.conf
+if [ ! -L "${PWD}/.env" ]; then
+  # No symlink exists - create it
   echo -e "\e[33mCreating .env symlink to chertmail.conf...\e[0m"
   echo -e "\e[33mجارٍ إنشاء رابط رمزي .env إلى chertmail.conf...\e[0m"
   ln -s chertmail.conf .env
-fi
-
-# Ensure script is executed in the CHERT Mail installation directory by checking for a .env symlink that points to chertmail.conf
-if [ ! -L "${PWD}/.env" ]; then
-  echo -e "\e[33mPlease run this script from the CHERT Mail installation directory.\e[0m"
-  echo -e "\e[33mيرجى تشغيل هذا السكربت من مجلد تثبيت تشيرت ميل.\e[0m"
-  echo -e "  \e[36mcd /path/to/chertmail && ./generate_config.sh\e[0m"
-  exit 1
-fi
-
-# Verify the .env symlink points to a chertmail.conf file
-env_target="$(readlink "${PWD}/.env" 2>/dev/null || true)"
-if [ -z "$env_target" ] || [ "$(basename "$env_target")" != "chertmail.conf" ]; then
-  echo -e "\e[31mThe found .env symlink does not point to a chertmail.conf file.\e[0m"
-  echo -e "\e[31mالرابط الرمزي .env لا يشير إلى ملف chertmail.conf.\e[0m"
-  echo -e "\e[33mPlease create a symbolic link .env -> chertmail.conf inside the CHERT Mail directory and run this script there.\e[0m"
-  echo -e "\e[33mيرجى إنشاء رابط رمزي .env -> chertmail.conf داخل مجلد تشيرت ميل وتشغيل السكربت من هناك.\e[0m"
-  echo -e "\e[33mNote: 'ln -s chertmail.conf .env' will create the symlink even if chertmail.conf does not yet exist.\e[0m"
-  echo -e "\e[33mملاحظة: الأمر 'ln -s chertmail.conf .env' سينشئ الرابط الرمزي حتى لو لم يكن ملف chertmail.conf موجوداً بعد.\e[0m"
-  echo -e "  \e[36mcd /path/to/chertmail && ln -s chertmail.conf .env && ./generate_config.sh\e[0m"
-  exit 1
+else
+  # Symlink exists - check if it points to chertmail.conf
+  env_target="$(readlink "${PWD}/.env" 2>/dev/null || true)"
+  if [ "$(basename "$env_target")" != "chertmail.conf" ]; then
+    echo -e "\e[33mUpdating .env symlink to point to chertmail.conf...\e[0m"
+    echo -e "\e[33mجارٍ تحديث رابط .env ليشير إلى chertmail.conf...\e[0m"
+    rm -f "${PWD}/.env"
+    ln -s chertmail.conf .env
+  fi
 fi
 
 # Load mailcow Generic Scripts
