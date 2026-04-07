@@ -102,21 +102,14 @@ while [ -z "${MAILCOW_HOSTNAME}" ]; do
   fi
 done
 
-if [ -a /etc/timezone ]; then
-  DETECTED_TZ=$(cat /etc/timezone)
-elif [ -a /etc/localtime ]; then
-  DETECTED_TZ=$(readlink /etc/localtime|sed -n 's|^.*zoneinfo/||p')
-fi
+# Default timezone for CHERT Mail (Asia/Riyadh)
+DEFAULT_TZ="Asia/Riyadh"
 
 while [ -z "${MAILCOW_TZ}" ]; do
-  echo "Timezone:"
-  echo "المنطقة الزمنية:"
-  if [ -z "${DETECTED_TZ}" ]; then
-    read -p "> " -e MAILCOW_TZ
-  else
-    read -p "[${DETECTED_TZ}] > " -e MAILCOW_TZ
-    [ -z "${MAILCOW_TZ}" ] && MAILCOW_TZ=${DETECTED_TZ}
-  fi
+  echo "Timezone (default: ${DEFAULT_TZ}):"
+  echo "المنطقة الزمنية (الافتراضي: ${DEFAULT_TZ}):"
+  read -p "[${DEFAULT_TZ}] > " -e MAILCOW_TZ
+  [ -z "${MAILCOW_TZ}" ] && MAILCOW_TZ=${DEFAULT_TZ}
 done
 
 MEM_TOTAL=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
@@ -543,3 +536,96 @@ else
   echo -e "\e[33mCannot determine current git repository version...\e[0m"
   echo -e "\e[33mتعذر تحديد إصدار مستودع git الحالي...\e[0m"
 fi
+
+# ------------------------------
+# Start CHERT Mail containers
+# ------------------------------
+echo ""
+echo -e "\e[32m========================================\e[0m"
+echo -e "\e[32m  Starting CHERT Mail containers...\e[0m"
+echo -e "\e[32m  جارٍ تشغيل حاويات تشيرت ميل...\e[0m"
+echo -e "\e[32m========================================\e[0m"
+echo ""
+
+docker compose pull --quiet
+docker compose up -d
+
+# ------------------------------
+# Wait for SSL certificate
+# ------------------------------
+echo ""
+echo -e "\e[33m========================================\e[0m"
+echo -e "\e[33m  Waiting for SSL certificate...\e[0m"
+echo -e "\e[33m  جارٍ انتظار شهادة SSL...\e[0m"
+echo -e "\e[33m========================================\e[0m"
+echo ""
+echo -e "\e[33mLet's Encrypt is obtaining your SSL certificate.\e[0m"
+echo -e "\e[33mLet's Encrypt يحصل على شهادة SSL الخاصة بك.\e[0m"
+echo ""
+echo -e "\e[33mThis may take 1-3 minutes. Please wait...\e[0m"
+echo -e "\e[33mقد يستغرق هذا 1-3 دقائق. يرجى الانتظار...\e[0m"
+echo ""
+
+# Wait for acme-mailcow to obtain certificate (max 3 minutes)
+ACME_TIMEOUT=180
+ACME_WAIT=0
+CERT_OBTAINED=false
+
+while [ $ACME_WAIT -lt $ACME_TIMEOUT ]; do
+  # Check if real certificate exists (not snake-oil)
+  if docker compose exec -T acme-mailcow test -f /var/www/acme/cert.pem 2>/dev/null; then
+    # Check if it's a Let's Encrypt certificate (not self-signed)
+    CERT_ISSUER=$(docker compose exec -T acme-mailcow openssl x509 -in /var/www/acme/cert.pem -issuer -noout 2>/dev/null | grep -i "Let's Encrypt" || true)
+    if [ -n "$CERT_ISSUER" ]; then
+      CERT_OBTAINED=true
+      break
+    fi
+  fi
+  sleep 10
+  ACME_WAIT=$((ACME_WAIT + 10))
+  echo -e "\e[33mWaiting for certificate... (${ACME_WAIT}s / ${ACME_TIMEOUT}s)\e[0m"
+  echo -e "\e[33mجارٍ انتظار الشهادة... (${ACME_WAIT} ثانية / ${ACME_TIMEOUT} ثانية)\e[0m"
+done
+
+if [ "$CERT_OBTAINED" = true ]; then
+  echo ""
+  echo -e "\e[32m========================================\e[0m"
+  echo -e "\e[32m  SSL Certificate obtained successfully!\e[0m"
+  echo -e "\e[32m  تم الحصول على شهادة SSL بنجاح!\e[0m"
+  echo -e "\e[32m========================================\e[0m"
+else
+  echo ""
+  echo -e "\e[33m========================================\e[0m"
+  echo -e "\e[33m  SSL Certificate not yet ready.\e[0m"
+  echo -e "\e[33m  شهادة SSL ليست جاهزة بعد.\e[0m"
+  echo -e "\e[33m========================================\e[0m"
+  echo ""
+  echo -e "\e[33mThe certificate may still be processing. Check with:\e[0m"
+  echo -e "\e[33mقد تكون الشهادة لا تزال قيد المعالجة. تحقق باستخدام:\e[0m"
+  echo -e "\e[36m  docker compose logs acme-mailcow\e[0m"
+  echo ""
+  echo -e "\e[33mMake sure:\e[0m"
+  echo -e "\e[33mتأكد من:\e[0m"
+  echo -e "\e[33m  1. Port 80 is open and accessible from the internet\e[0m"
+  echo -e "\e[33m     المنفذ 80 مفتوح ويمكن الوصول إليه من الإنترنت\e[0m"
+  echo -e "\e[33m  2. DNS for ${MAILCOW_HOSTNAME} points to this server\e[0m"
+  echo -e "\e[33m     DNS لـ ${MAILCOW_HOSTNAME} يشير إلى هذا الخادم\e[0m"
+fi
+
+echo ""
+echo -e "\e[32m========================================\e[0m"
+echo -e "\e[32m  CHERT Mail installation complete!\e[0m"
+echo -e "\e[32m  اكتمل تثبيت تشيرت ميل!\e[0m"
+echo -e "\e[32m========================================\e[0m"
+echo ""
+echo -e "\e[32mAccess your mail server at: https://${MAILCOW_HOSTNAME}\e[0m"
+echo -e "\e[32mالوصول إلى خادم البريد على: https://${MAILCOW_HOSTNAME}\e[0m"
+echo ""
+echo -e "\e[33mDefault login:\e[0m"
+echo -e "\e[33mبيانات الدخول الافتراضية:\e[0m"
+echo -e "\e[36m  Username | اسم المستخدم: admin\e[0m"
+echo -e "\e[36m  Password | كلمة المرور: moohoo\e[0m"
+echo ""
+echo -e "\e[31mIMPORTANT: Change the default password immediately!\e[0m"
+echo -e "\e[31mمهم: قم بتغيير كلمة المرور الافتراضية فوراً!\e[0m"
+echo ""
