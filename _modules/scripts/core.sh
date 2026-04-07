@@ -15,20 +15,117 @@ NC='\e[0m'
 
 caller="${BASH_SOURCE[1]##*/}"
 
+install_docker() {
+    echo -e "${YELLOW}Docker is not installed. Installing Docker...${NC}"
+    echo -e "${YELLOW}Docker غير مثبت. جارٍ تثبيت Docker...${NC}"
+
+    # Install prerequisites
+    if command -v apt-get &>/dev/null; then
+        apt-get update -qq
+        apt-get install -y -qq curl ca-certificates gnupg lsb-release
+    elif command -v yum &>/dev/null; then
+        yum install -y -q curl ca-certificates
+    elif command -v dnf &>/dev/null; then
+        dnf install -y -q curl ca-certificates
+    fi
+
+    # Install Docker using official script
+    echo -e "${YELLOW}Running official Docker installation script...${NC}"
+    echo -e "${YELLOW}جارٍ تشغيل سكربت تثبيت Docker الرسمي...${NC}"
+    curl -fsSL https://get.docker.com | sh
+
+    if [[ $? -ne 0 ]]; then
+        echo -e "${RED}Failed to install Docker. Please install manually.${NC}"
+        echo -e "${RED}فشل تثبيت Docker. يرجى التثبيت يدوياً.${NC}"
+        exit 1
+    fi
+
+    # Start and enable Docker service
+    if command -v systemctl &>/dev/null; then
+        systemctl start docker
+        systemctl enable docker
+    fi
+
+    echo -e "${GREEN}Docker installed successfully!${NC}"
+    echo -e "${GREEN}تم تثبيت Docker بنجاح!${NC}"
+}
+
+install_prerequisites() {
+    local missing_tools=("$@")
+    echo -e "${YELLOW}Installing missing prerequisites: ${missing_tools[*]}${NC}"
+    echo -e "${YELLOW}جارٍ تثبيت المتطلبات المفقودة: ${missing_tools[*]}${NC}"
+
+    if command -v apt-get &>/dev/null; then
+        apt-get update -qq
+        for tool in "${missing_tools[@]}"; do
+            case $tool in
+                sha1sum) apt-get install -y -qq coreutils ;;
+                *) apt-get install -y -qq "$tool" ;;
+            esac
+        done
+    elif command -v yum &>/dev/null; then
+        for tool in "${missing_tools[@]}"; do
+            case $tool in
+                sha1sum) yum install -y -q coreutils ;;
+                *) yum install -y -q "$tool" ;;
+            esac
+        done
+    elif command -v dnf &>/dev/null; then
+        for tool in "${missing_tools[@]}"; do
+            case $tool in
+                sha1sum) dnf install -y -q coreutils ;;
+                *) dnf install -y -q "$tool" ;;
+            esac
+        done
+    else
+        echo -e "${RED}Cannot detect package manager. Please install manually: ${missing_tools[*]}${NC}"
+        echo -e "${RED}تعذر اكتشاف مدير الحزم. يرجى التثبيت يدوياً: ${missing_tools[*]}${NC}"
+        exit 1
+    fi
+}
+
 get_installed_tools(){
+    local missing_tools=()
+
     for bin in openssl curl docker git awk sha1sum grep cut jq; do
         if [[ -z $(command -v ${bin}) ]]; then
-          echo "Error: Cannot find command '${bin}'. Cannot proceed."
-          echo "خطأ: لم يتم العثور على الأمر '${bin}'. لا يمكن المتابعة."
-          echo "Solution: Please review system requirements and install requirements. Then, re-run the script."
-          echo "الحل: يرجى مراجعة متطلبات النظام وتثبيت المتطلبات. ثم أعد تشغيل السكربت."
-          echo "See System Requirements: https://docs.mailcow.email/getstarted/install/"
-          echo "انظر متطلبات النظام: https://docs.mailcow.email/getstarted/install/"
-          echo "Exiting..."
-          echo "جارٍ الخروج..."
-          exit 1
+            missing_tools+=("$bin")
         fi
     done
+
+    if [[ ${#missing_tools[@]} -gt 0 ]]; then
+        echo -e "${YELLOW}Missing tools detected: ${missing_tools[*]}${NC}"
+        echo -e "${YELLOW}تم اكتشاف أدوات مفقودة: ${missing_tools[*]}${NC}"
+
+        # Check if docker is among missing tools
+        if [[ " ${missing_tools[*]} " =~ " docker " ]]; then
+            install_docker
+            # Remove docker from missing_tools array
+            missing_tools=("${missing_tools[@]/docker}")
+        fi
+
+        # Install other missing tools
+        local other_missing=()
+        for tool in "${missing_tools[@]}"; do
+            [[ -n "$tool" ]] && other_missing+=("$tool")
+        done
+
+        if [[ ${#other_missing[@]} -gt 0 ]]; then
+            install_prerequisites "${other_missing[@]}"
+        fi
+
+        # Verify all tools are now installed
+        for bin in openssl curl docker git awk sha1sum grep cut jq; do
+            if [[ -z $(command -v ${bin}) ]]; then
+                echo -e "${RED}Error: Failed to install '${bin}'. Cannot proceed.${NC}"
+                echo -e "${RED}خطأ: فشل تثبيت '${bin}'. لا يمكن المتابعة.${NC}"
+                exit 1
+            fi
+        done
+
+        echo -e "${GREEN}All prerequisites installed successfully!${NC}"
+        echo -e "${GREEN}تم تثبيت جميع المتطلبات بنجاح!${NC}"
+    fi
 
     if grep --help 2>&1 | head -n 1 | grep -q -i "busybox"; then echo -e "${LIGHT_RED}BusyBox grep detected, please install gnu grep, \"apk add --no-cache --upgrade grep\"${NC}"; exit 1; fi
     # This will also cover sort
