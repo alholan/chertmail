@@ -4,6 +4,13 @@
 # Resolve the directory this script lives in for consistent behavior when invoked from elsewhere
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" >/dev/null 2>&1 && pwd)"
 
+# Auto-create .env symlink if it doesn't exist (fresh installation)
+if [ ! -e "${PWD}/.env" ] && [ ! -L "${PWD}/.env" ]; then
+  echo -e "\e[33mCreating .env symlink to chertmail.conf...\e[0m"
+  echo -e "\e[33mجارٍ إنشاء رابط رمزي .env إلى chertmail.conf...\e[0m"
+  ln -s chertmail.conf .env
+fi
+
 # Ensure script is executed in the CHERT Mail installation directory by checking for a .env symlink that points to chertmail.conf
 if [ ! -L "${PWD}/.env" ]; then
   echo -e "\e[33mPlease run this script from the CHERT Mail installation directory.\e[0m"
@@ -13,7 +20,7 @@ if [ ! -L "${PWD}/.env" ]; then
 fi
 
 # Verify the .env symlink points to a chertmail.conf file
-env_target="$(readlink -f "${PWD}/.env" 2>/dev/null || true)"
+env_target="$(readlink "${PWD}/.env" 2>/dev/null || true)"
 if [ -z "$env_target" ] || [ "$(basename "$env_target")" != "chertmail.conf" ]; then
   echo -e "\e[31mThe found .env symlink does not point to a chertmail.conf file.\e[0m"
   echo -e "\e[31mالرابط الرمزي .env لا يشير إلى ملف chertmail.conf.\e[0m"
