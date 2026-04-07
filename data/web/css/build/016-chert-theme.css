@@ -1,0 +1,317 @@
+/*
+ * CHERT Mail Theme
+ * Brand Colors:
+ * - Primary: #F47C4B (orange)
+ * - Secondary: #C6A87D (sand/brown)
+ * - Light background: #E9E2C7
+ * - Text dark: #111111
+ * - Text light: #FFFFFF
+ */
+
+/* ============================================
+   CSS Custom Properties (Variables)
+   ============================================ */
+:root {
+  --chert-primary: #F47C4B;
+  --chert-primary-hover: #e06835;
+  --chert-primary-active: #d15a28;
+  --chert-secondary: #C6A87D;
+  --chert-secondary-hover: #b89a6a;
+  --chert-light-bg: #E9E2C7;
+  --chert-text-dark: #111111;
+  --chert-text-light: #FFFFFF;
+
+  /* Override Bootstrap primary */
+  --bs-primary: #F47C4B;
+  --bs-primary-rgb: 244, 124, 75;
+  --bs-link-color: #F47C4B;
+  --bs-link-hover-color: #e06835;
+}
+
+/* ============================================
+   Links
+   ============================================ */
+a {
+  color: var(--chert-primary);
+}
+a:hover {
+  color: var(--chert-primary-hover);
+}
+
+/* ============================================
+   Primary Buttons
+   ============================================ */
+.btn-primary {
+  background-color: var(--chert-primary) !important;
+  border-color: var(--chert-primary) !important;
+  color: var(--chert-text-dark) !important;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--chert-primary-hover) !important;
+  border-color: var(--chert-primary-hover) !important;
+  color: var(--chert-text-dark) !important;
+}
+.btn-primary:active,
+.btn-primary.active {
+  background-color: var(--chert-primary-active) !important;
+  border-color: var(--chert-primary-active) !important;
+}
+.btn-primary:disabled,
+.btn-primary.disabled {
+  background-color: var(--chert-primary) !important;
+  border-color: var(--chert-primary) !important;
+  opacity: 0.65;
+}
+
+/* Outline Primary */
+.btn-outline-primary {
+  color: var(--chert-primary) !important;
+  border-color: var(--chert-primary) !important;
+  background-color: transparent !important;
+}
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background-color: var(--chert-primary) !important;
+  border-color: var(--chert-primary) !important;
+  color: var(--chert-text-dark) !important;
+}
+
+/* ============================================
+   Info Buttons (use primary for consistency)
+   ============================================ */
+.btn-info {
+  background-color: var(--chert-primary) !important;
+  border-color: var(--chert-primary-hover) !important;
+  color: var(--chert-text-dark) !important;
+}
+.btn-info:hover,
+.btn-info:focus {
+  background-color: var(--chert-primary-hover) !important;
+  border-color: var(--chert-primary-hover) !important;
+}
+
+/* ============================================
+   Background Classes
+   ============================================ */
+.bg-primary {
+  background-color: var(--chert-primary) !important;
+}
+.bg-info {
+  background-color: var(--chert-primary) !important;
+}
+
+/* ============================================
+   Alerts
+   ============================================ */
+.alert-primary {
+  background-color: var(--chert-primary) !important;
+  border-color: var(--chert-primary-hover) !important;
+  color: var(--chert-text-dark) !important;
+}
+.alert-primary a {
+  color: var(--chert-text-dark) !important;
+  text-decoration: underline;
+}
+
+.alert-info {
+  background-color: var(--chert-light-bg) !important;
+  border-color: var(--chert-secondary) !important;
+  color: var(--chert-text-dark) !important;
+}
+.alert-info a {
+  color: var(--chert-primary) !important;
+}
+
+/* ============================================
+   Navbar
+   ============================================ */
+.navbar.bg-light {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid var(--chert-light-bg);
+}
+.navbar .nav-link {
+  color: var(--chert-text-dark) !important;
+}
+.navbar .nav-link:hover {
+  color: var(--chert-primary) !important;
+}
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+  background-color: var(--chert-light-bg);
+  color: var(--chert-text-dark);
+}
+
+/* ============================================
+   Cards & Panels
+   ============================================ */
+.card {
+  border-color: #e0d9c4;
+}
+.card-header {
+  background-color: #faf8f3;
+  border-bottom-color: #e0d9c4;
+}
+
+/* ============================================
+   Login Page Specific
+   ============================================ */
+.card .mailcow-logo {
+  padding: 10px 0;
+}
+
+/* Login card styling */
+body > .container > .row > .col-lg-6 > .card,
+body > .container > .row > .col-md-6 > .card {
+  border-color: var(--chert-secondary);
+}
+
+/* ============================================
+   Form Controls Focus State
+   ============================================ */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--chert-primary);
+  box-shadow: 0 0 0 0.2rem rgba(244, 124, 75, 0.25);
+}
+
+/* ============================================
+   Pagination
+   ============================================ */
+.page-link {
+  color: var(--chert-primary);
+}
+.page-link:hover {
+  color: var(--chert-primary-hover);
+  background-color: var(--chert-light-bg);
+}
+.page-item.active .page-link {
+  background-color: var(--chert-primary) !important;
+  border-color: var(--chert-primary) !important;
+  color: var(--chert-text-dark) !important;
+}
+
+/* ============================================
+   Tabs
+   ============================================ */
+.nav-tabs .nav-link.active {
+  color: var(--chert-primary);
+  border-bottom-color: var(--chert-primary) !important;
+}
+.nav-tabs .nav-link:hover {
+  color: var(--chert-primary-hover);
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--chert-primary) !important;
+  color: var(--chert-text-dark) !important;
+}
+
+/* ============================================
+   Progress Bars
+   ============================================ */
+.progress-bar {
+  background-color: var(--chert-primary);
+}
+.progress-bar.bg-success {
+  background-color: #28b62c !important;
+}
+.progress-bar.bg-warning {
+  background-color: var(--chert-secondary) !important;
+}
+.progress-bar.bg-danger {
+  background-color: #ff4136 !important;
+}
+
+/* ============================================
+   Badges
+   ============================================ */
+.badge.bg-primary {
+  background-color: var(--chert-primary) !important;
+}
+.badge.bg-info {
+  background-color: var(--chert-secondary) !important;
+  color: var(--chert-text-dark) !important;
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+.footer {
+  color: #777777;
+}
+.footer a {
+  color: var(--chert-primary);
+}
+
+/* ============================================
+   Dropdown Active/Selected State
+   ============================================ */
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: var(--chert-primary);
+  color: var(--chert-text-dark);
+}
+
+/* ============================================
+   Bootstrap Select Plugin
+   ============================================ */
+.bootstrap-select .dropdown-item.active,
+.bootstrap-select .dropdown-item.selected {
+  background-color: var(--chert-primary) !important;
+  color: var(--chert-text-dark) !important;
+}
+
+/* ============================================
+   DataTables
+   ============================================ */
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control:before {
+  background-color: var(--chert-primary) !important;
+  border-color: var(--chert-primary-hover) !important;
+}
+
+/* ============================================
+   Form Switch/Checkbox (Dark Mode Toggle etc.)
+   ============================================ */
+.form-check-input:checked {
+  background-color: var(--chert-primary);
+  border-color: var(--chert-primary);
+}
+.form-check-input:focus {
+  border-color: var(--chert-primary);
+  box-shadow: 0 0 0 0.2rem rgba(244, 124, 75, 0.25);
+}
+
+/* ============================================
+   Accordion
+   ============================================ */
+.accordion-button:not(.collapsed) {
+  color: var(--chert-primary);
+  background-color: var(--chert-light-bg);
+}
+.accordion-button:focus {
+  border-color: var(--chert-primary);
+  box-shadow: 0 0 0 0.2rem rgba(244, 124, 75, 0.25);
+}
+
+/* ============================================
+   Selection highlight
+   ============================================ */
+::selection {
+  background-color: var(--chert-primary);
+  color: var(--chert-text-dark);
+}
+::-moz-selection {
+  background-color: var(--chert-primary);
+  color: var(--chert-text-dark);
+}
+
+/* ============================================
+   List Group Active
+   ============================================ */
+.list-group-item.active {
+  background-color: var(--chert-primary);
+  border-color: var(--chert-primary);
+  color: var(--chert-text-dark);
+}

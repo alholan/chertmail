@@ -455,3 +455,125 @@ input::placeholder {
 .btn-light, .btn-light:hover {
     background-image: none;
 }
+
+/* ============================================
+   CHERT Mail Dark Mode Overrides
+   Brand Colors applied to dark theme
+   ============================================ */
+
+/* Links */
+a {
+  color: #F9A07A;
+}
+a:hover {
+  color: #F47C4B;
+}
+
+/* Primary Buttons */
+.btn-primary {
+  background-color: #F47C4B !important;
+  border-color: #e06835 !important;
+  color: #111111 !important;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #e06835 !important;
+  border-color: #d15a28 !important;
+  color: #111111 !important;
+}
+
+/* Info Buttons */
+.btn-info {
+  background-color: #F47C4B !important;
+  border-color: #e06835 !important;
+  color: #111111 !important;
+}
+.btn-info:hover,
+.btn-info:focus {
+  background-color: #e06835 !important;
+  border-color: #d15a28 !important;
+}
+
+/* Backgrounds */
+.bg-primary, .bg-info {
+  background-color: #F47C4B !important;
+}
+
+/* Alerts */
+.alert-primary {
+  background-color: #F47C4B !important;
+  border-color: #e06835 !important;
+  color: #111111 !important;
+}
+.alert-info {
+  background-color: #3a3530 !important;
+  border-color: #C6A87D !important;
+}
+
+/* Pagination */
+.page-item.active .page-link {
+  background-color: #F47C4B !important;
+  border-color: #F47C4B !important;
+  color: #111111 !important;
+}
+
+/* Tabs */
+.nav-tabs .nav-link.active {
+  color: #F47C4B !important;
+}
+.nav-pills .nav-link.active {
+  background-color: #F47C4B !important;
+  color: #111111 !important;
+}
+
+/* Badges */
+.badge.bg-primary {
+  background-color: #F47C4B !important;
+}
+.badge.bg-info {
+  background-color: #C6A87D !important;
+  color: #111111 !important;
+}
+
+/* Form Controls */
+.form-control:focus,
+.form-select:focus {
+  border-color: #F47C4B;
+  box-shadow: 0 0 0 0.2rem rgba(244, 124, 75, 0.35);
+}
+.form-check-input:checked {
+  background-color: #F47C4B;
+  border-color: #F47C4B;
+}
+
+/* Dropdown */
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: #F47C4B !important;
+  color: #111111 !important;
+}
+
+/* DataTables */
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control:before {
+  background-color: #F47C4B !important;
+  border-color: #e06835 !important;
+}
+
+/* List Group */
+.list-group-item.active {
+  background-color: #F47C4B !important;
+  border-color: #F47C4B !important;
+  color: #111111 !important;
+}
+
+/* Accordion */
+.accordion-button:not(.collapsed) {
+  color: #F9A07A;
+}
+
+/* Selection */
+::selection {
+  background-color: #F47C4B;
+  color: #111111;
+}

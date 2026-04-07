@@ -19,9 +19,13 @@ get_installed_tools(){
     for bin in openssl curl docker git awk sha1sum grep cut jq; do
         if [[ -z $(command -v ${bin}) ]]; then
           echo "Error: Cannot find command '${bin}'. Cannot proceed."
+          echo "خطأ: لم يتم العثور على الأمر '${bin}'. لا يمكن المتابعة."
           echo "Solution: Please review system requirements and install requirements. Then, re-run the script."
+          echo "الحل: يرجى مراجعة متطلبات النظام وتثبيت المتطلبات. ثم أعد تشغيل السكربت."
           echo "See System Requirements: https://docs.mailcow.email/getstarted/install/"
+          echo "انظر متطلبات النظام: https://docs.mailcow.email/getstarted/install/"
           echo "Exiting..."
+          echo "جارٍ الخروج..."
           exit 1
         fi
     done
@@ -46,12 +50,17 @@ get_compose_type(){
         sed -i 's/^DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=native/' "$SCRIPT_DIR/mailcow.conf"
       fi
       echo -e "\e[33mFound Docker Compose Plugin (native).\e[0m"
+      echo -e "\e[33mتم العثور على إضافة Docker Compose (native).\e[0m"
       echo -e "\e[33mSetting the DOCKER_COMPOSE_VERSION Variable to native\e[0m"
+      echo -e "\e[33mتعيين متغير DOCKER_COMPOSE_VERSION إلى native\e[0m"
       sleep 2
       echo -e "\e[33mNotice: You'll have to update this Compose Version via your Package Manager manually!\e[0m"
+      echo -e "\e[33mملاحظة: ستحتاج لتحديث إصدار Compose عبر مدير الحزم يدوياً!\e[0m"
     else
       echo -e "\e[31mCannot find Docker Compose with a Version Higher than 2.X.X.\e[0m"
+      echo -e "\e[31mلم يتم العثور على Docker Compose بإصدار أعلى من 2.X.X.\e[0m"
       echo -e "\e[31mPlease update/install it manually regarding to this doc site: https://docs.mailcow.email/install/\e[0m"
+      echo -e "\e[31mيرجى تحديثه/تثبيته يدوياً وفقاً لهذه الوثائق: https://docs.mailcow.email/install/\e[0m"
       exit 1
     fi
   elif docker-compose > /dev/null 2>&1; then
@@ -63,45 +72,62 @@ get_compose_type(){
         sed -i 's/^DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=standalone/' "$SCRIPT_DIR/mailcow.conf"
       fi
       echo -e "\e[33mFound Docker Compose Standalone.\e[0m"
+      echo -e "\e[33mتم العثور على Docker Compose المستقل.\e[0m"
       echo -e "\e[33mSetting the DOCKER_COMPOSE_VERSION Variable to standalone\e[0m"
+      echo -e "\e[33mتعيين متغير DOCKER_COMPOSE_VERSION إلى standalone\e[0m"
       sleep 2
       echo -e "\e[33mNotice: For an automatic update of docker-compose please use the update_compose.sh scripts located at the helper-scripts folder.\e[0m"
+      echo -e "\e[33mملاحظة: للتحديث التلقائي لـ docker-compose يرجى استخدام سكربت update_compose.sh في مجلد helper-scripts.\e[0m"
     else
       echo -e "\e[31mCannot find Docker Compose with a Version Higher than 2.X.X.\e[0m"
+      echo -e "\e[31mلم يتم العثور على Docker Compose بإصدار أعلى من 2.X.X.\e[0m"
       echo -e "\e[31mPlease update/install manually regarding to this doc site: https://docs.mailcow.email/install/\e[0m"
+      echo -e "\e[31mيرجى تحديثه/تثبيته يدوياً وفقاً لهذه الوثائق: https://docs.mailcow.email/install/\e[0m"
       exit 1
     fi
   fi
   else
     echo -e "\e[31mCannot find Docker Compose.\e[0m"
+    echo -e "\e[31mلم يتم العثور على Docker Compose.\e[0m"
     echo -e "\e[31mPlease install it regarding to this doc site: https://docs.mailcow.email/install/\e[0m"
+    echo -e "\e[31mيرجى تثبيته وفقاً لهذه الوثائق: https://docs.mailcow.email/install/\e[0m"
     exit 1
   fi
 }
 
 detect_bad_asn() {
   echo -e "\e[33mDetecting if your IP is listed on Spamhaus Bad ASN List...\e[0m"
+  echo -e "\e[33mجارٍ الكشف إذا كان عنوان IP الخاص بك مدرجاً في قائمة Spamhaus للـ ASN السيئة...\e[0m"
   response=$(curl --connect-timeout 15 --max-time 30 -s -o /dev/null -w "%{http_code}" "https://asn-check.mailcow.email")
   if [ "$response" -eq 503 ]; then
     if [ -z "$SPAMHAUS_DQS_KEY" ]; then
       echo -e "\e[33mYour server's public IP uses an AS that is blocked by Spamhaus to use their DNS public blocklists for Postfix.\e[0m"
+      echo -e "\e[33mعنوان IP العام لخادمك يستخدم AS محظوراً من قبل Spamhaus لاستخدام قوائم الحظر العامة لـ Postfix.\e[0m"
       echo -e "\e[33mmailcow did not detected a value for the variable SPAMHAUS_DQS_KEY inside mailcow.conf!\e[0m"
+      echo -e "\e[33mتشيرت ميل لم يكتشف قيمة للمتغير SPAMHAUS_DQS_KEY في mailcow.conf!\e[0m"
       sleep 2
       echo ""
       echo -e "\e[33mTo use the Spamhaus DNS Blocklists again, you will need to create a FREE account for their Data Query Service (DQS) at: https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account\e[0m"
+      echo -e "\e[33mلاستخدام قوائم Spamhaus DNS مجدداً، ستحتاج إنشاء حساب مجاني لخدمة استعلام البيانات (DQS) على: https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account\e[0m"
       echo -e "\e[33mOnce done, enter your DQS API key in mailcow.conf and mailcow will do the rest for you!\e[0m"
+      echo -e "\e[33mبعد الانتهاء، أدخل مفتاح DQS API في mailcow.conf وسيقوم تشيرت ميل بالباقي!\e[0m"
       echo ""
       sleep 2
     else
       echo -e "\e[33mYour server's public IP uses an AS that is blocked by Spamhaus to use their DNS public blocklists for Postfix.\e[0m"
+      echo -e "\e[33mعنوان IP العام لخادمك يستخدم AS محظوراً من قبل Spamhaus لاستخدام قوائم الحظر العامة لـ Postfix.\e[0m"
       echo -e "\e[32mmailcow detected a Value for the variable SPAMHAUS_DQS_KEY inside mailcow.conf. Postfix will use DQS with the given API key...\e[0m"
+      echo -e "\e[32mتشيرت ميل اكتشف قيمة للمتغير SPAMHAUS_DQS_KEY في mailcow.conf. سيستخدم Postfix DQS مع مفتاح API المعطى...\e[0m"
     fi
   elif [ "$response" -eq 200 ]; then
     echo -e "\e[33mCheck completed! Your IP is \e[32mclean\e[0m"
+    echo -e "\e[33mاكتمل الفحص! عنوان IP الخاص بك \e[32mنظيف\e[0m"
   elif [ "$response" -eq 429 ]; then
     echo -e "\e[33mCheck completed! \e[31mYour IP seems to be rate limited on the ASN Check service... please try again later!\e[0m"
+    echo -e "\e[33mاكتمل الفحص! \e[31mيبدو أن عنوان IP الخاص بك محدود المعدل على خدمة فحص ASN... يرجى المحاولة لاحقاً!\e[0m"
   else
     echo -e "\e[31mCheck failed! \e[0mMaybe a DNS or Network problem?\e[0m"
+    echo -e "\e[31mفشل الفحص! \e[0mربما مشكلة DNS أو شبكة؟\e[0m"
   fi
 }
 
@@ -116,14 +142,15 @@ check_online_status() {
 }
 
 prefetch_images() {
-  [[ -z ${BRANCH} ]] && { echo -e "\e[33m\nUnknown branch...\e[0m"; exit 1; }
+  [[ -z ${BRANCH} ]] && { echo -e "\e[33m\nUnknown branch...\e[0m"; echo -e "\e[33mفرع غير معروف...\e[0m"; exit 1; }
   git fetch origin #${BRANCH}
   while read image; do
     RET_C=0
     until docker pull "${image}"; do
       RET_C=$((RET_C + 1))
       echo -e "\e[33m\nError pulling $image, retrying...\e[0m"
-      [ ${RET_C} -gt 3 ] && { echo -e "\e[31m\nToo many failed retries, exiting\e[0m"; exit 1; }
+      echo -e "\e[33mخطأ في سحب $image، جارٍ إعادة المحاولة...\e[0m"
+      [ ${RET_C} -gt 3 ] && { echo -e "\e[31m\nToo many failed retries, exiting\e[0m"; echo -e "\e[31mمحاولات فاشلة كثيرة جداً، جارٍ الخروج\e[0m"; exit 1; }
       sleep 1
     done
   done < <(git show "origin/${BRANCH}:docker-compose.yml" | grep "image:" | awk '{ gsub("image:","", $3); print $2 }')
@@ -157,23 +184,30 @@ docker_garbage() {
 
   if [[ ! -z ${IMGS_TO_DELETE[*]} ]]; then
       echo "The following unused mailcow images were found:"
+      echo "تم العثور على الصور التالية غير المستخدمة من تشيرت ميل:"
       for id in "${IMGS_TO_DELETE[@]}"; do
           echo "    ${IMAGES_INFO[$id]} ($id)"
       done
 
       if [ -z "$FORCE" ]; then
-          read -r -p "Do you want to delete them to free up some space? [y/N] " response
+          echo "Do you want to delete them to free up some space?"
+          echo "هل تريد حذفها لتحرير بعض المساحة؟"
+          read -r -p "[y/N] " response
           if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
               docker rmi ${IMGS_TO_DELETE[*]}
           else
               echo "OK, skipped."
+              echo "حسناً، تم التخطي."
           fi
       else
           echo "Running in forced mode! Force removing old mailcow images..."
+          echo "التشغيل في الوضع الإجباري! حذف صور تشيرت ميل القديمة إجبارياً..."
           docker rmi ${IMGS_TO_DELETE[*]}
       fi
       echo -e "\e[32mFurther cleanup...\e[0m"
+      echo -e "\e[32mمزيد من التنظيف...\e[0m"
       echo "If you want to cleanup further garbage collected by Docker, please make sure all containers are up and running before cleaning your system by executing \"docker system prune\""
+      echo "إذا كنت تريد تنظيف المزيد من الملفات المجمعة بواسطة Docker، تأكد من أن جميع الحاويات تعم�� قبل تنظيف نظامك بتنفيذ \"docker system prune\""
   fi
 }
 
@@ -213,16 +247,22 @@ detect_major_update() {
 
     if [[ ${#updates_to_apply[@]} -gt 0 ]]; then
       echo -e "\e[33m\nMAJOR UPDATES to be applied:\e[0m"
+      echo -e "\e[33mتحديثات رئيسية سيتم تطبيقها:\e[0m"
       for update in "${updates_to_apply[@]}"; do
         echo "$update - $release_url/$update"
       done
 
       echo -e "\nPlease read the release notes before proceeding."
-      read -p "Do you want to proceed with the update? [y/n] " response
+      echo -e "يرجى قراءة ملاحظات الإصدار قبل المتابعة."
+      echo "Do you want to proceed with the update?"
+      echo "هل تريد المتابعة مع التحديث؟"
+      read -p "[y/n] " response
       if [[ "${response}" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
         echo "Proceeding with the update..."
+        echo "جارٍ المتابعة مع التحديث..."
       else
         echo "Update canceled. Exiting."
+        echo "تم إلغاء التحديث. ��ارٍ الخروج."
         exit 1
       fi
     fi

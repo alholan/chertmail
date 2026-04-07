@@ -33,7 +33,7 @@ if ($https_port === FALSE) {
 //$https_port = 1234;
 // Other settings =>
 $autodiscover_config = array(
-  'displayName' => 'A mailcow mail server',
+  'displayName' => 'CHERT Mail Server',
   'displayShortName' => 'mail server',
   // General autodiscover service type: "activesync" or "imap"
   // emClient uses autodiscover, but does not support ActiveSync. mailcow excludes emClient from ActiveSync.
@@ -84,6 +84,7 @@ $DEFAULT_LANG = 'en-gb';
 // https://www.iso.org/obp/ui/#search
 // https://en.wikipedia.org/wiki/IETF_language_tag
 $AVAILABLE_LANGUAGES = array(
+  'ar-sa' => 'العربية (Arabic)',
   // 'ca-es' => 'Català (Catalan)',
   'bg-bg' => 'Български (Bulgarian)',
   'cs-cz' => 'Čeština (Czech)',
@@ -116,6 +117,9 @@ $AVAILABLE_LANGUAGES = array(
   'zh-cn' => '简体中文 (Simplified Chinese)',
   'zh-tw' => '繁體中文 (Traditional Chinese)',
 );
+
+// RTL (Right-to-Left) languages
+$RTL_LANGUAGES = array('ar-sa');
 
 // default theme is lumen
 // additional themes can be found here: https://bootswatch.com/
@@ -164,7 +168,7 @@ $SESSION_SAMESITE_POLICY = "Lax";
 $SESSION_NAME = "MCSESSID";
 
 // Label for OTP devices
-$OTP_LABEL = "mailcow UI";
+$OTP_LABEL = "CHERT Mail";
 
 // How long to wait (in s) for cURL Docker requests
 $DOCKER_TIMEOUT = 60;

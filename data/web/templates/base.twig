@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ mailcow_locale|default('en') }}">
+<html lang="{{ mailcow_locale|default('en') }}" dir="{{ is_rtl ? 'rtl' : 'ltr' }}">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,6 +9,9 @@
   <title>{{ ui_texts.title_name|raw }}</title>
 
   <link rel="stylesheet" href="{{ css_path }}">
+  {% if is_rtl %}
+  <link rel="stylesheet" href="/css/build/017-rtl.css">
+  {% endif %}
   <script>
     // check if darkmode is preferred by OS or set by localStorage
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && localStorage.getItem("mailcow_theme") !== "light" ||
@@ -32,8 +35,8 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top p-0">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">
-      <img class="main-logo" alt="mailcow-logo" src="{{ logo|default('/img/cow_mailcow.svg') }}">
-      <img class="main-logo-dark" alt="mailcow-logo-dark" src="{{ logo_dark|default('/img/cow_mailcow.svg') }}">
+      <img class="main-logo" alt="CHERT Mail" src="{{ logo|default('/img/chert_mail.svg') }}">
+      <img class="main-logo-dark" alt="CHERT Mail" src="{{ logo_dark|default('/img/chert_mail.svg') }}">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <i class="bi bi-list fs-3"></i>
@@ -672,24 +675,21 @@ function recursiveBase64StrToArrayBuffer(obj) {
   {% endif %}
   {% if mailcow_cc_username and mailcow_info.mailcow_branch|lower == "master" and mailcow_info.version_tag|default %}
   <span class="version">
-    🐮 + 🐋 = 💕
-        Version: <a href="{{ mailcow_info.git_project_url }}/releases/tag/{{ mailcow_info.version_tag }}" target="_blank">{{ mailcow_info.version_tag }}
-    </a>
+    CHERT Mail
+        Version: {{ mailcow_info.version_tag }}
   </span>
   {% endif %}
   {% if mailcow_cc_username and mailcow_info.mailcow_branch|lower == "nightly" and mailcow_info.version_tag|default %}
   <span class="version">
-    🛠️🐮 + 🐋 = 💕
-        Nightly: <a href="{{ mailcow_info.git_project_url }}/commit/{{ mailcow_info.git_commit }}" target="_blank">{{ mailcow_info.version_tag }}
-    </a><br>
+    CHERT Mail
+        Nightly: {{ mailcow_info.version_tag }}<br>
     <span style="text-align:right;display:block;">Build: {{ mailcow_info.git_commit_date }}</span>
   </span>
   {% endif %}
   {% if mailcow_cc_username and mailcow_info.mailcow_branch|lower == "legacy" and mailcow_info.version_tag|default %}
   <span class="version">
-    ⚰️🐮 + 🐋 = 💕
-        Legacy: <a href="{{ mailcow_info.git_project_url }}/commit/{{ mailcow_info.git_commit }}" target="_blank">{{ mailcow_info.version_tag }}
-    </a><br>
+    CHERT Mail
+        Legacy: {{ mailcow_info.version_tag }}<br>
     <span style="text-align:right;display:block;">Build: {{ mailcow_info.git_commit_date }}</span>
   </span>
   {% endif %}

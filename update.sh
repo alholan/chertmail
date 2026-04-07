@@ -9,11 +9,14 @@ MAILCOW_CONF="${SCRIPT_DIR}/mailcow.conf"
 if [ ! -f "${PWD}/mailcow.conf" ]; then
   if [ -f "${SCRIPT_DIR}/mailcow.conf" ]; then
     echo -e "\e[33mPlease run this script directly from the mailcow installation directory:\e[0m"
+    echo -e "\e[33mيرجى تشغيل هذا السكربت مباشرة من مجلد تثبيت تشيرت ميل:\e[0m"
     echo -e "  \e[36mcd ${SCRIPT_DIR} && ./update.sh\e[0m"
     exit 1
   else
     echo -e "\e[31mmailcow.conf not found in current directory or script directory (\e[36m${SCRIPT_DIR}\e[31m).\e[0m"
+    echo -e "\e[31mلم يتم العثور على mailcow.conf في المجلد الحالي أو مجلد السكربت (\e[36m${SCRIPT_DIR}\e[31m).\e[0m"
     echo -e "\e[33mRun this script directly from your mailcow installation directory.\e[0m"
+    echo -e "\e[33mقم بتشغيل هذا السكربت مباشرة من مجلد تثبيت تشيرت ميل.\e[0m"
     exit 1
   fi
 fi
@@ -23,6 +26,7 @@ BRANCH="$(cd "${SCRIPT_DIR}" && git rev-parse --abbrev-ref HEAD)"
 for arg in "$@"; do
   if [[ "$arg" == "--dev" || "$arg" == "-d" ]]; then
     echo -e "\e[32mRunning in Developer mode...\e[0m"
+    echo -e "\e[32mجارٍ التشغيل في وضع المطور...\e[0m"
     DEV=y
     break
   fi
@@ -39,11 +43,13 @@ if [ ! "$DEV" ]; then
   fi
 
   echo -e "\e[33mFetching latest _modules from origin/${BRANCH}…\e[0m"
+  echo -e "\e[33mجارٍ جلب أحدث _modules من origin/${BRANCH}…\e[0m"
   git fetch origin "${BRANCH}"
   git checkout "origin/${BRANCH}" -- _modules
 
   if [[ ! -d "${MODULE_DIR}" || -z "$(ls -A "${MODULE_DIR}")" ]]; then
     echo -e "\e[31mError: _modules is still missing or empty after fetch!\e[0m"
+    echo -e "\e[31mخطأ: _modules لا يزال مفقوداً أو فارغاً بعد الجلب!\e[0m"
     exit 2
   fi
 
@@ -53,12 +59,15 @@ if [ ! "$DEV" ]; then
   # Check if modules changed
   if [[ "${MODULES_HASH_BEFORE}" != "${MODULES_HASH_AFTER}" ]]; then
     echo -e "\e[33m_modules have been updated. Please restart the update script.\e[0m"
+    echo -e "\e[33mتم تحديث _modules. يرجى إعادة تشغيل سكربت التحديث.\e[0m"
     exit 2
   fi
 else
   echo -e "\e[33mDeveloper mode: Skipping _modules update from git\e[0m"
+  echo -e "\e[33mوضع المطور: تخطي تحديث _modules من git\e[0m"
   if [[ ! -d "${MODULE_DIR}" || -z "$(ls -A "${MODULE_DIR}")" ]]; then
     echo -e "\e[31mError: _modules directory is missing or empty!\e[0m"
+    echo -e "\e[31mخطأ: مجلد _modules مفقود أو فارغ!\e[0m"
     exit 2
   fi
 fi
@@ -73,6 +82,7 @@ source _modules/scripts/migrate_options.sh
 # Check permissions
 if [ "$(id -u)" -ne "0" ]; then
   echo "You need to be root"
+  echo "يجب أن تكون مستخدم root"
   exit 1
 fi
 
@@ -108,32 +118,40 @@ while (($#)); do
   case "${1}" in
     --check|-c)
       echo "Checking remote code for updates..."
+      echo "جارٍ التحقق من وجود تحديثات..."
       LATEST_REV=$(git ls-remote --exit-code --refs --quiet https://github.com/mailcow/mailcow-dockerized "${BRANCH}" | cut -f1)
       if [ "$?" -ne 0 ]; then
         echo "A problem occurred while trying to fetch the latest revision from github."
+        echo "حدثت مشكلة أثناء محاولة جلب أحدث إصدار من GitHub."
         exit 99
       fi
       if [[ -z $(git log HEAD --pretty=format:"%H" | grep "${LATEST_REV}") ]]; then
         echo -e "Updated code is available.\nThe changes can be found here: https://github.com/mailcow/mailcow-dockerized/commits/master"
+        echo -e "تتوفر تحديثات جديدة.\nيمكن العثور على التغييرات هنا: https://github.com/mailcow/mailcow-dockerized/commits/master"
         git log --date=short --pretty=format:"%ad - %s" "$(git rev-parse --short HEAD)"..origin/master
         exit 0
       else
         echo "No updates available."
+        echo "لا تتوفر تحد��ثات."
         exit 3
       fi
     ;;
     --check-tags)
       echo "Checking remote tags for updates..."
+      echo "جارٍ التحقق من وجود إصدارات جديدة..."
       LATEST_TAG_REV=$(git ls-remote --exit-code --quiet --tags origin | tail -1 | cut -f1)
       if [ "$?" -ne 0 ]; then
         echo "A problem occurred while trying to fetch the latest tag from github."
+        echo "حدثت مشكلة أثناء محاولة جلب أحدث إصدار من GitHub."
         exit 99
       fi
       if [[ -z $(git log HEAD --pretty=format:"%H" | grep "${LATEST_TAG_REV}") ]]; then
         echo -e "New tag is available.\nThe changes can be found here: https://github.com/mailcow/mailcow-dockerized/releases/latest"
+        echo -e "يتوفر إصدار جديد.\nيمكن العثور على التغييرات هنا: https://github.com/mailcow/mailcow-dockerized/releases/latest"
         exit 0
       else
         echo "No updates available."
+        echo "لا تتوفر تحديثات."
         exit 3
       fi
     ;;
@@ -152,6 +170,7 @@ while (($#)); do
     ;;
     --gc)
       echo -e "\e[32mCollecting garbage...\e[0m"
+      echo -e "\e[32mجارٍ تنظيف الملفات غير المستخدمة...\e[0m"
       docker_garbage
       exit 0
     ;;
@@ -161,11 +180,13 @@ while (($#)); do
     ;;
     --prefetch)
       echo -e "\e[32mPrefetching images...\e[0m"
+      echo -e "\e[32mجارٍ تحميل الصور مس��قاً...\e[0m"
       prefetch_images
       exit 0
     ;;
     -f|--force)
       echo -e "\e[32mRunning in forced mode...\e[0m"
+      echo -e "\e[32mجارٍ التشغيل في الوضع الإجباري...\e[0m"
       FORCE=y
     ;;
     -d|--dev)
@@ -196,7 +217,7 @@ while (($#)); do
   shift
 done
 
-[[ ! -f mailcow.conf ]] && { echo -e "\e[31mmailcow.conf is missing! Is mailcow installed?\e[0m"; exit 1;}
+[[ ! -f mailcow.conf ]] && { echo -e "\e[31mmailcow.conf is missing! Is mailcow installed?\e[0m"; echo -e "\e[31mملف mailcow.conf مفقود! هل تم تثبيت تشيرت ميل؟\e[0m"; exit 1;}
 
 chmod 600 mailcow.conf
 source mailcow.conf
@@ -228,44 +249,61 @@ detect_bad_asn
 
 if [[ ("${SKIP_PING_CHECK}" == "y") ]]; then
 echo -e "\e[32mSkipping Ping Check...\e[0m"
+echo -e "\e[32mتخطي فحص الاتصال...\e[0m"
 
 else
    echo -en "Checking internet connection... "
+   echo "جارٍ التحقق من اتصال الإنترنت... "
    if ! check_online_status; then
       echo -e "\e[31mfailed\e[0m"
+      echo -e "\e[31mفشل\e[0m"
       exit 1
    else
       echo -e "\e[32mOK\e[0m"
+      echo -e "\e[32mتم بنجاح\e[0m"
    fi
 fi
 
 if ! [ "$NEW_BRANCH" ]; then
   echo -e "\e[33mDetecting which build your mailcow runs on...\e[0m"
+  echo -e "\e[33mجارٍ الكشف عن إصدار تشيرت ميل الذي تستخدمه...\e[0m"
   sleep 1
   if [ "${BRANCH}" == "master" ]; then
     echo -e "\e[32mYou are receiving stable updates (master).\e[0m"
+    echo -e "\e[32mأنت تستقبل تحديثات مستقرة (master).\e[0m"
     echo -e "\e[33mTo change that run the update.sh Script one time with the --nightly parameter to switch to nightly builds.\e[0m"
+    echo -e "\e[33mلتغيير ذلك، شغّل سكربت update.sh مرة واحدة مع معامل --nightly للتبديل إلى البناء الليلي.\e[0m"
 
   elif [ "${BRANCH}" == "nightly" ]; then
     echo -e "\e[31mYou are receiving unstable updates (nightly). These are for testing purposes only!!!\e[0m"
+    echo -e "\e[31mأنت تستقبل تحديثات غير مستقرة (nightly). هذه للاختبار فقط!!!\e[0m"
     sleep 1
     echo -e "\e[33mTo change that run the update.sh Script one time with the --stable parameter to switch to stable builds.\e[0m"
+    echo -e "\e[33mلتغيير ذلك، شغّل سكربت update.sh مرة واحدة مع معامل --stable للتبديل إلى البناء المستقر.\e[0m"
 
   elif [ "${BRANCH}" == "legacy" ]; then
     echo -e "\e[31mYou are receiving legacy updates. The legacy branch will only receive security updates until February 2026.\e[0m"
+    echo -e "\e[31mأنت تستقبل تحديثات الفرع القديم. سيستقبل الفرع القديم تحديثات أمنية فقط حتى فبراير 2026.\e[0m"
     sleep 1
     echo -e "\e[33mTo change that run the update.sh Script one time with the --stable parameter to switch to stable builds.\e[0m"
+    echo -e "\e[33mلتغيير ذلك، شغّل سكربت update.sh مرة واحدة مع معامل --stable للتبديل إلى البناء المستقر.\e[0m"
 
   else
     echo -e "\e[33mYou are receiving updates from an unsupported branch.\e[0m"
+    echo -e "\e[33mأنت تستقبل تحديثات من فرع غير مدعوم.\e[0m"
     sleep 1
     echo -e "\e[33mThe mailcow stack might still work but it is recommended to switch to the master branch (stable builds).\e[0m"
+    echo -e "\e[33mقد يعمل تشيرت ميل ولكن يُنصح بالتبديل إلى الفرع الرئيسي (البناء المستقر).\e[0m"
     echo -e "\e[33mTo change that run the update.sh Script one time with the --stable parameter to switch to stable builds.\e[0m"
+    echo -e "\e[33mلتغيير ذلك، شغّل سكربت update.sh مرة واحدة مع معامل --stable للتبديل إلى البناء المستقر.\e[0m"
   fi
 elif [ "$FORCE" ]; then
   echo -e "\e[31mYou are running in forced mode!\e[0m"
+  echo -e "\e[31mأنت تعمل في الوضع الإجباري!\e[0m"
   echo -e "\e[31mA Branch Switch can only be performed manually (monitored).\e[0m"
+  echo -e "\e[31mتبديل الفرع يمكن أن يتم يدوياً فقط (بمراقبة).\e[0m"
   echo -e "\e[31mPlease rerun the update.sh Script without the --force/-f parameter.\e[0m"
+  echo -e "\e[31mيرجى إعادة تشغيل سكربت update.sh بدون معامل --force/-f.\e[0m"
   sleep 1
 elif [ "$NEW_BRANCH" == "master" ] && [ "$CURRENT_BRANCH" != "master" ]; then
   echo -e "\e[33mYou are about to switch your mailcow updates to the stable (master) branch.\e[0m"
@@ -357,23 +395,29 @@ if [ ! "$DEV" ]; then
 fi
 
 if [ ! "$FORCE" ]; then
-  read -r -p "Are you sure you want to update mailcow: dockerized? All containers will be stopped. [y/N] " response
+  echo "Are you sure you want to update mailcow: dockerized? All containers will be stopped."
+  echo "هل أنت متأكد من تحديث تشيرت ميل؟ سيتم إيقاف جميع الحاويات."
+  read -r -p "[y/N] " response
   if [[ ! "${response}" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     echo "OK, exiting."
+    echo "حسناً، جارٍ الخروج."
     exit 0
   fi
   detect_major_update
 fi
 
 echo -e "\e[32mValidating docker-compose stack configuration...\e[0m"
+echo -e "\e[32mجارٍ التحقق من صحة إعدادات docker-compose...\e[0m"
 sed -i 's/HTTPS_BIND:-:/HTTPS_BIND:-/g' docker-compose.yml
 sed -i 's/HTTP_BIND:-:/HTTP_BIND:-/g' docker-compose.yml
 if ! $COMPOSE_COMMAND config -q; then
   echo -e "\e[31m\nOh no, something went wrong. Please check the error message above.\e[0m"
+  echo -e "\e[31m\nحدث خطأ ما. يرجى التحقق من رسالة الخطأ أعلاه.\e[0m"
   exit 1
 fi
 
 echo -e "\e[32mChecking for conflicting bridges...\e[0m"
+echo -e "\e[32mجارٍ التحقق من تعارض الجسور...\e[0m"
 MAILCOW_BRIDGE=$($COMPOSE_COMMAND config | grep -i com.docker.network.bridge.name | cut -d':' -f2)
 while read NAT_ID; do
   iptables -t nat -D POSTROUTING "$NAT_ID"
@@ -390,13 +434,16 @@ if ! git diff-index --quiet HEAD; then
 fi
 
 echo -e "\e[32mPrefetching images...\e[0m"
+echo -e "\e[32mجارٍ تحميل الصور مسبقاً...\e[0m"
 prefetch_images
 
 echo -e "\e[32mStopping mailcow...\e[0m"
+echo -e "\e[32mجارٍ إيقاف تشيرت ميل...\e[0m"
 sleep 2
 MAILCOW_CONTAINERS=($($COMPOSE_COMMAND ps -q))
 $COMPOSE_COMMAND down
 echo -e "\e[32mChecking for remaining containers...\e[0m"
+echo -e "\e[32mجارٍ التحقق من الحاويات المتبقية...\e[0m"
 sleep 2
 for container in "${MAILCOW_CONTAINERS[@]}"; do
   docker rm -f "$container" 2> /dev/null
@@ -462,6 +509,7 @@ else
 fi
 
 echo -e "\e[32mFetching new images, if any...\e[0m"
+echo -e "\e[32mجارٍ جلب الصور الجديدة، إن وجدت...\e[0m"
 sleep 2
 $COMPOSE_COMMAND pull
 
@@ -545,13 +593,16 @@ fi
 
 if [[ ${SKIP_START} == "y" ]]; then
   echo -e "\e[33mNot starting mailcow, please run \"$COMPOSE_COMMAND up -d --remove-orphans\" to start mailcow.\e[0m"
+  echo -e "\e[33mلن يتم تشغيل تشيرت ميل، يرجى تشغيل \"$COMPOSE_COMMAND up -d --remove-orphans\" لبدء تشيرت ميل.\e[0m"
 else
   echo -e "\e[32mStarting mailcow...\e[0m"
+  echo -e "\e[32mجارٍ تشغيل تشيرت ميل...\e[0m"
   sleep 2
   $COMPOSE_COMMAND up -d --remove-orphans
 fi
 
 echo -e "\e[32mCollecting garbage...\e[0m"
+echo -e "\e[32mجارٍ تنظيف الملفات غير المستخدمة...\e[0m"
 docker_garbage
 
 # Run post-update-hook

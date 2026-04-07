@@ -62,7 +62,7 @@
         "disable_login": "Uždrausti prisijungimą (ateinančios žinutės vistiek bus gaunamos)",
         "inactive": "Neaktyvus",
         "alias_address": "Pakaitiniai/is adresai/as",
-        "alias_address_info": "<small>Pilnas el. pašto adresas (-ai) arba @example.com, kad gautumėte visus pranešimus iš domeno (atskirtus kableliais). <b>Tik \"mailcow\" domenai</b>.</small>",
+        "alias_address_info": "<small>Pilnas el. pašto adresas (-ai) arba @example.com, kad gautumėte visus pranešimus iš domeno (atskirtus kableliais). <b>Tik \"CHERT Mail\" domenai</b>.</small>",
         "alias_domain": "Pakaitinis domenas",
         "automap": "Stenktis automatiškai susieti aplankus (\"Išsiųsti\", \"Išsiųsti\" => \"išsiųsti\" ir tt.)",
         "backup_mx_options": "Perdavimo nustatymai",

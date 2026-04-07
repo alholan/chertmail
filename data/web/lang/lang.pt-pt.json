@@ -65,7 +65,7 @@
         "password_repeat": "Confirmar senha (repetir)",
         "r_active": "Restrictions Ativos",
         "r_inactive": "Restrictions Inativos",
-        "r_info": "Greyed out/disabled elements on the list of active restrictions are not known as valid restrictions to mailcow and cannot be moved. Unknown restrictions will be set in order of appearance anyway. <br>You can add new elements in <code>inc/vars.local.inc.php</code> to be able to toggle them.",
+        "r_info": "Greyed out/disabled elements on the list of active restrictions are not known as valid restrictions to CHERT Mail and cannot be moved. Unknown restrictions will be set in order of appearance anyway. <br>You can add new elements in <code>inc/vars.local.inc.php</code> to be able to toggle them.",
         "remove": "Remover",
         "save": "Salvar",
         "search_domain_da": "Selecione o(s) domínio(s)",

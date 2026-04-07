@@ -71,6 +71,7 @@ if (isset($UI_TEXTS["ui_footer"])) {
 $globalVariables = [
   'mailcow_hostname' => getenv('MAILCOW_HOSTNAME'),
   'mailcow_locale' => @$_SESSION['mailcow_locale'],
+  'is_rtl' => in_array(@$_SESSION['mailcow_locale'], $RTL_LANGUAGES ?? []),
   'mailcow_cc_role' => @$_SESSION['mailcow_cc_role'],
   'mailcow_cc_username' => @$_SESSION['mailcow_cc_username'],
   'is_master' => preg_match('/y|yes/i', getenv('MASTER')),

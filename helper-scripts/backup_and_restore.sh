@@ -8,33 +8,41 @@ fi
 
 if [[ ! ${1} =~ (backup|restore) ]]; then
   echo "First parameter needs to be 'backup' or 'restore'"
+  echo "المعامل الأول يجب أن يكون 'backup' أو 'restore'"
   exit 1
 fi
 
 if [[ ${1} == "backup" && ! ${2} =~ (crypt|vmail|redis|rspamd|postfix|mysql|all|--delete-days) ]]; then
   echo "Second parameter needs to be 'vmail', 'crypt', 'redis', 'rspamd', 'postfix', 'mysql', 'all' or '--delete-days'"
+  echo "المعامل الثاني يجب أن يكون 'vmail', 'crypt', 'redis', 'rspamd', 'postfix', 'mysql', 'all' أو '--delete-days'"
   exit 1
 fi
 
 if [[ -z ${BACKUP_LOCATION} ]]; then
   while [[ -z ${BACKUP_LOCATION} ]]; do
-    read -ep "Backup location (absolute path, starting with /): " BACKUP_LOCATION
+    echo "Backup location (absolute path, starting with /):"
+    echo "موقع النسخ الاحتياطي (مسار مطلق، يبدأ بـ /):"
+    read -ep "> " BACKUP_LOCATION
   done
 fi
 
 if [[ ! ${BACKUP_LOCATION} =~ ^/ ]]; then
   echo "Backup directory needs to be given as absolute path (starting with /)."
+  echo "يجب إدخال مجلد النسخ الاحتياطي كمسار مطلق (يبدأ بـ /)."
   exit 1
 fi
 
 if [[ -f ${BACKUP_LOCATION} ]]; then
   echo "${BACKUP_LOCATION} is a file!"
+  echo "${BACKUP_LOCATION} هو ملف وليس مجلد!"
   exit 1
 fi
 
 if [[ ! -d ${BACKUP_LOCATION} ]]; then
   echo "${BACKUP_LOCATION} is not a directory"
-  read -p "Create it now? [y|N] " CREATE_BACKUP_LOCATION
+  echo "${BACKUP_LOCATION} ليس مجلداً"
+  echo "Create it now? | إنشاؤه الآن؟"
+  read -p "[y|N] " CREATE_BACKUP_LOCATION
   if [[ ! ${CREATE_BACKUP_LOCATION,,} =~ ^(yes|y)$ ]]; then
     exit 1
   else
@@ -44,6 +52,7 @@ if [[ ! -d ${BACKUP_LOCATION} ]]; then
 else
   if [[ ${1} == "backup" ]] && [[ -z $(echo $(stat -Lc %a ${BACKUP_LOCATION}) | grep -oE '[0-9][0-9][5-7]') ]]; then
     echo "${BACKUP_LOCATION} is not write-able for others, that's required for a backup."
+    echo "${BACKUP_LOCATION} غير قابل للكتابة للآخرين، وهذا مطلوب للنسخ الاحتياطي."
     exit 1
   fi
 fi
@@ -57,32 +66,40 @@ ARCH=$(uname -m)
 
 if ! [[ "${THREADS}" =~ ^[1-9][0-9]?$ ]] ; then
   echo "Thread input is not a number!"
+  echo "قيمة الخيوط ليست رقماً!"
   exit 1
 elif [[ "${THREADS}" =~ ^[1-9][0-9]?$ ]] ; then
   echo "Using ${THREADS} Thread(s) for this run."
+  echo "استخدام ${THREADS} خيط/خيوط لهذه العملية."
   echo "Notice: You can set the Thread count with the THREADS Variable before you run this script."
+  echo "ملاحظة: يمكنك تعيين عدد الخيوط باستخدام متغير THREADS قبل تشغيل هذا السكربت."
 fi
 
 if [ ! -f ${COMPOSE_FILE} ]; then
   echo "Compose file not found"
+  echo "��م يتم العثور على ملف Compose"
   exit 1
 fi
 
 if [ ! -f ${ENV_FILE} ]; then
   echo "Environment file not found"
+  echo "لم يتم العثور على ملف البيئة"
   exit 1
 fi
 
 echo "Using ${BACKUP_LOCATION} as backup/restore location."
+echo "استخدام ${BACKUP_LOCATION} كموقع للنسخ الاحتياطي/الاستعادة."
 echo
 
 source ${SCRIPT_DIR}/../mailcow.conf
 
 if [[ -z ${COMPOSE_PROJECT_NAME} ]]; then
   echo "Could not determine compose project name"
+  echo "تعذر تحديد اسم مشروع compose"
   exit 1
 else
   echo "Found project name ${COMPOSE_PROJECT_NAME}"
+  echo "تم العثور على اسم المشروع ${COMPOSE_PROJECT_NAME}"
   CMPS_PRJ=$(echo ${COMPOSE_PROJECT_NAME} | tr -cd "[0-9A-Za-z-_]")
 fi
 
@@ -242,6 +259,7 @@ function restore() {
 
   echo
   echo "Stopping watchdog-mailcow..."
+  echo "جارٍ إيقاف watchdog-mailcow..."
   docker stop $(docker ps -qf name=watchdog-mailcow)
   echo
   RESTORE_LOCATION="${1}"
@@ -432,6 +450,7 @@ elif [[ ${1} == "restore" ]]; then
   declare -A FOLDER_SELECTION
   if [[ $(find ${BACKUP_LOCATION}/mailcow-* -maxdepth 1 -type d 2> /dev/null| wc -l) -lt 1 ]]; then
     echo "Selected backup location has no subfolders"
+    echo "موقع النسخ الاحتياطي المحدد لا يحتوي على مجلدات فرعية"
     exit 1
   fi
   for folder in $(ls -d ${BACKUP_LOCATION}/mailcow-*/); do
@@ -442,7 +461,9 @@ elif [[ ${1} == "restore" ]]; then
   echo
   input_sel=0
   while [[ ${input_sel} -lt 1 ||  ${input_sel} -gt ${i} ]]; do
-    read -p "Select a restore point: " input_sel
+    echo "Select a restore point:"
+    echo "اختر نقطة استعادة:"
+    read -p "> " input_sel
   done
   i=1
   echo
@@ -450,6 +471,7 @@ elif [[ ${1} == "restore" ]]; then
   RESTORE_POINT="${FOLDER_SELECTION[${input_sel}]}"
   if [[ -z $(find "${FOLDER_SELECTION[${input_sel}]}" -maxdepth 1 \( -type d -o -type f \) -regex ".*\(redis\|rspamd\|mariadb\|mysql\|crypt\|vmail\|postfix\).*") ]]; then
     echo "No datasets found"
+    echo "لم يتم العثور على مجموعات بيانات"
     exit 1
   fi
 
@@ -494,8 +516,11 @@ elif [[ ${1} == "restore" ]]; then
   echo
   input_sel=-1
   while [[ ${input_sel} -lt 0 ||  ${input_sel} -gt ${i} ]]; do
-    read -p "Select a dataset to restore: " input_sel
+    echo "Select a dataset to restore:"
+    echo "اختر مجموعة البيانات للاستعادة:"
+    read -p "> " input_sel
   done
   echo "Restoring ${FILE_SELECTION[${input_sel}]} from ${RESTORE_POINT}..."
+  echo "جارٍ استعادة ${FILE_SELECTION[${input_sel}]} من ${RESTORE_POINT}..."
   restore "${RESTORE_POINT}" ${FILE_SELECTION[${input_sel}]}
 fi

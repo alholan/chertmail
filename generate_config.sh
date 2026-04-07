@@ -7,6 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" >/dev/null 2>&1 && pwd)"
 # Ensure script is executed in the mailcow installation directory by checking for a .env symlink that points to mailcow.conf
 if [ ! -L "${PWD}/.env" ]; then
   echo -e "\e[33mPlease run this script from the mailcow installation directory.\e[0m"
+  echo -e "\e[33mيرجى تشغيل هذا السكربت من مجلد تثبيت تشيرت ميل.\e[0m"
   echo -e "  \e[36mcd /path/to/mailcow && ./generate_config.sh\e[0m"
   exit 1
 fi
@@ -15,8 +16,11 @@ fi
 env_target="$(readlink -f "${PWD}/.env" 2>/dev/null || true)"
 if [ -z "$env_target" ] || [ "$(basename "$env_target")" != "mailcow.conf" ]; then
   echo -e "\e[31mThe found .env symlink does not point to a mailcow.conf file.\e[0m"
+  echo -e "\e[31mالرابط الرمزي .env لا يشير إلى ملف mailcow.conf.\e[0m"
   echo -e "\e[33mPlease create a symbolic link .env -> mailcow.conf inside the mailcow directory and run this script there.\e[0m"
+  echo -e "\e[33mيرجى إنشاء رابط رمزي .env -> mailcow.conf داخل مجلد تشيرت ميل وتشغيل السكربت من هناك.\e[0m"
   echo -e "\e[33mNote: 'ln -s mailcow.conf .env' will create the symlink even if mailcow.conf does not yet exist.\e[0m"
+  echo -e "\e[33mملاحظة: الأمر 'ln -s mailcow.conf .env' سينشئ الرابط الرمزي حتى لو لم يكن ملف mailcow.conf موجوداً بعد.\e[0m"
   echo -e "  \e[36mcd /path/to/mailcow && ln -s mailcow.conf .env && ./generate_config.sh\e[0m"
   exit 1
 fi
@@ -32,8 +36,11 @@ get_docker_version
 
 if [[ $docker_version -lt 24 ]]; then
   echo -e "\e[31mCannot find Docker with a Version higher or equals 24.0.0\e[0m"
+  echo -e "\e[31mلم يتم العثور على Docker بإصدار 24.0.0 أو أعلى\e[0m"
   echo -e "\e[33mmailcow needs a newer Docker version to work properly...\e[0m"
+  echo -e "\e[33mتشيرت ميل يحتاج إصدار Docker أحدث ليعمل بشكل صحيح...\e[0m"
   echo -e "\e[31mPlease update your Docker installation... exiting\e[0m"
+  echo -e "\e[31mيرجى تحديث تثبيت Docker... جارٍ الخروج\e[0m"
   exit 1
 fi
 
@@ -47,7 +54,9 @@ else
 fi
 
 if [ -f mailcow.conf ]; then
-  read -r -p "A config file exists and will be overwritten, are you sure you want to continue? [y/N] " response
+  echo "A config file exists and will be overwritten, are you sure you want to continue?"
+  echo "ملف الإعدادات موجود وسيتم استبداله، هل أنت متأكد من المتابعة؟"
+  read -r -p "[y/N] " response
   case $response in
     [yY][eE][sS]|[yY])
       mv mailcow.conf mailcow.conf_backup
@@ -60,25 +69,38 @@ if [ -f mailcow.conf ]; then
 fi
 
 echo "Press enter to confirm the detected value '[value]' where applicable or enter a custom value."
+echo "اضغط Enter لتأكيد القيمة المكتشفة '[value]' أو أدخل قيمة مخصصة."
+echo ""
 while [ -z "${MAILCOW_HOSTNAME}" ]; do
-  read -p "Mail server hostname (FQDN) - this is not your mail domain, but your mail servers hostname: " -e MAILCOW_HOSTNAME
+  echo "Mail server hostname (FQDN) - this is not your mail domain, but your mail servers hostname:"
+  echo "اسم مضيف خادم البريد (FQDN) - هذا ليس نطاق بريدك، بل اسم مضيف خادم البريد:"
+  read -p "> " -e MAILCOW_HOSTNAME
   DOTS=${MAILCOW_HOSTNAME//[^.]};
   if [ ${#DOTS} -lt 1 ]; then
     echo -e "\e[31mMAILCOW_HOSTNAME (${MAILCOW_HOSTNAME}) is not a FQDN!\e[0m"
+    echo -e "\e[31mMAILCOW_HOSTNAME (${MAILCOW_HOSTNAME}) ليس اسم نطاق مؤهل بالكامل (FQDN)!\e[0m"
     sleep 1
     echo "Please change it to a FQDN and redeploy the stack with docker(-)compose up -d"
+    echo "يرجى تغييره إلى FQDN وإعادة نشر الحاويات باستخدام docker compose up -d"
     exit 1
   elif [[ "${MAILCOW_HOSTNAME: -1}" == "." ]]; then
     echo "MAILCOW_HOSTNAME (${MAILCOW_HOSTNAME}) is ending with a dot. This is not a valid FQDN!"
+    echo "MAILCOW_HOSTNAME (${MAILCOW_HOSTNAME}) ينتهي بنقطة. هذا ليس FQDN صالح!"
     exit 1
   elif [ ${#DOTS} -eq 1 ]; then
     echo -e "\e[33mMAILCOW_HOSTNAME (${MAILCOW_HOSTNAME}) does not contain a Subdomain. This is not fully tested and may cause issues.\e[0m"
+    echo -e "\e[33mMAILCOW_HOSTNAME (${MAILCOW_HOSTNAME}) لا يحتوي على نطاق فرعي. هذا غير مُختبر بالكامل وقد يسبب مشاكل.\e[0m"
     echo "Find more information about why this message exists here: https://github.com/mailcow/mailcow-dockerized/issues/1572"
-    read -r -p "Do you want to proceed anyway? [y/N] " response
+    echo "لمزيد من المعلومات حول سبب ظهور هذه الرسالة: https://github.com/mailcow/mailcow-dockerized/issues/1572"
+    echo "Do you want to proceed anyway?"
+    echo "هل تريد المتابعة على أي حال؟"
+    read -r -p "[y/N] " response
     if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
-      echo "OK. Procceding."
+      echo "OK. Proceeding."
+      echo "حسناً. جارٍ المتابعة."
     else
       echo "OK. Exiting."
+      echo "حسناً. جارٍ الخروج."
       exit 1
     fi
   fi
@@ -91,10 +113,12 @@ elif [ -a /etc/localtime ]; then
 fi
 
 while [ -z "${MAILCOW_TZ}" ]; do
+  echo "Timezone:"
+  echo "المنطقة الزمنية:"
   if [ -z "${DETECTED_TZ}" ]; then
-    read -p "Timezone: " -e MAILCOW_TZ
+    read -p "> " -e MAILCOW_TZ
   else
-    read -p "Timezone [${DETECTED_TZ}]: " -e MAILCOW_TZ
+    read -p "[${DETECTED_TZ}] > " -e MAILCOW_TZ
     [ -z "${MAILCOW_TZ}" ] && MAILCOW_TZ=${DETECTED_TZ}
   fi
 done
@@ -104,8 +128,12 @@ MEM_TOTAL=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 if [ -z "${SKIP_CLAMD}" ]; then
   if [ "${MEM_TOTAL}" -le "2621440" ]; then
     echo "Installed memory is <= 2.5 GiB. It is recommended to disable ClamAV to prevent out-of-memory situations."
+    echo "الذاكرة المثبتة <= 2.5 جيجابايت. يُنصح بتعطيل ClamAV لمنع نفاد الذاكرة."
     echo "ClamAV can be re-enabled by setting SKIP_CLAMD=n in mailcow.conf."
-    read -r -p  "Do you want to disable ClamAV now? [Y/n] " response
+    echo "يمكن إعادة تفعيل ClamAV بتعيين SKIP_CLAMD=n في ملف mailcow.conf."
+    echo "Do you want to disable ClamAV now?"
+    echo "هل تريد تعطيل ClamAV الآن؟"
+    read -r -p  "[Y/n] " response
     case $response in
       [nN][oO]|[nN])
         SKIP_CLAMD=n
@@ -121,15 +149,22 @@ fi
 
 if [[ ${SKIP_BRANCH} != y ]]; then
   echo "Which branch of mailcow do you want to use?"
+  echo "أي فرع من تشيرت ميل تريد استخدامه؟"
   echo ""
   echo "Available Branches:"
+  echo "الفروع المتاحة:"
   echo "- master branch (stable updates) | default, recommended [1]"
+  echo "- الفرع الرئيسي (تحديثات مستقرة) | الافتراضي، موصى به [1]"
   echo "- nightly branch (unstable updates, testing) | not-production ready [2]"
+  echo "- الفرع الليلي (تحديثات غير مستقرة، للاختبار) | غير جاهز للإنتاج [2]"
   echo "- legacy branch (supported until February 2026) | deprecated, security updates only [3]"
+  echo "- الفرع القديم (مدعوم حتى فبراير 2026) | قديم، تحديثات أمنية فقط [3]"
   sleep 1
 
   while [ -z "${MAILCOW_BRANCH}" ]; do
-    read -r -p  "Choose the Branch with it's number [1/2/3] " branch
+    echo "Choose the Branch with its number:"
+    echo "اختر الفرع برقمه:"
+    read -r -p  "[1/2/3] " branch
     case $branch in
       [3])
         MAILCOW_BRANCH="legacy"
@@ -148,12 +183,16 @@ if [[ ${SKIP_BRANCH} != y ]]; then
 
 elif [[ ${SKIP_BRANCH} == y ]]; then
   echo -e "\033[33mEnabled Dev Mode.\033[0m"
+  echo -e "\033[33mتم تفعيل وضع المطور.\033[0m"
   echo -e "\033[33mNot checking out a different branch!\033[0m"
+  echo -e "\033[33mلن يتم التبديل إلى فرع مختلف!\033[0m"
   MAILCOW_BRANCH=$(git rev-parse --short $(git rev-parse @{upstream}))
 
 else
-  echo -e "\033[31mCould not determine branch input..."
-  echo -e "\033[31mExiting."
+  echo -e "\033[31mCould not determine branch input...\033[0m"
+  echo -e "\033[31mتعذر تحديد مدخل الفرع...\033[0m"
+  echo -e "\033[31mExiting.\033[0m"
+  echo -e "\033[31mجارٍ الخروج.\033[0m"
   exit 1
 fi
 
@@ -462,9 +501,11 @@ chmod 600 mailcow.conf
 
 # copy but don't overwrite existing certificate
 echo "Generating snake-oil certificate..."
+echo "جارٍ إنشاء شهادة مؤقتة..."
 # Making Willich more popular
 openssl req -x509 -newkey rsa:4096 -keyout data/assets/ssl-example/key.pem -out data/assets/ssl-example/cert.pem -days 365 -subj "/C=DE/ST=NRW/L=Willich/O=mailcow/OU=mailcow/CN=${MAILCOW_HOSTNAME}" -sha256 -nodes
 echo "Copying snake-oil certificate..."
+echo "جارٍ نسخ الشهادة المؤقتة..."
 cp -n -d data/assets/ssl-example/*.pem data/assets/ssl/
 
 # Set app_info.inc.php
@@ -529,4 +570,5 @@ else
   echo '  $MAILCOW_UPDATEDAT='$(date +%s)';' >> data/web/inc/app_info.inc.php
   echo '?>' >> data/web/inc/app_info.inc.php
   echo -e "\e[33mCannot determine current git repository version...\e[0m"
+  echo -e "\e[33mتعذر تحديد إصدار مستودع git الحالي...\e[0m"
 fi
