@@ -156,8 +156,8 @@ get_compose_type(){
     else
       echo -e "\e[31mCannot find Docker Compose with a Version Higher than 2.X.X.\e[0m"
       echo -e "\e[31mلم يتم العثور على Docker Compose بإصدار أعلى من 2.X.X.\e[0m"
-      echo -e "\e[31mPlease update/install it manually regarding to this doc site: https://docs.mailcow.email/install/\e[0m"
-      echo -e "\e[31mيرجى تحديثه/تثبيته يدوياً وفقاً لهذه الوثائق: https://docs.mailcow.email/install/\e[0m"
+      echo -e "\e[31mPlease update/install it manually regarding to this doc site: https://docs.chertmail.com/install/\e[0m"
+      echo -e "\e[31mيرجى تحديثه/تثبيته يدوياً وفقاً لهذه الوثائق: https://docs.chertmail.com/install/\e[0m"
       exit 1
     fi
   elif docker-compose > /dev/null 2>&1; then
@@ -178,16 +178,16 @@ get_compose_type(){
     else
       echo -e "\e[31mCannot find Docker Compose with a Version Higher than 2.X.X.\e[0m"
       echo -e "\e[31mلم يتم العثور على Docker Compose بإصدار أعلى من 2.X.X.\e[0m"
-      echo -e "\e[31mPlease update/install manually regarding to this doc site: https://docs.mailcow.email/install/\e[0m"
-      echo -e "\e[31mيرجى تحديثه/تثبيته يدوياً وفقاً لهذه الوثائق: https://docs.mailcow.email/install/\e[0m"
+      echo -e "\e[31mPlease update/install manually regarding to this doc site: https://docs.chertmail.com/install/\e[0m"
+      echo -e "\e[31mيرجى تحديثه/تثبيته يدوياً وفقاً لهذه الوثائق: https://docs.chertmail.com/install/\e[0m"
       exit 1
     fi
   fi
   else
     echo -e "\e[31mCannot find Docker Compose.\e[0m"
     echo -e "\e[31mلم يتم العثور على Docker Compose.\e[0m"
-    echo -e "\e[31mPlease install it regarding to this doc site: https://docs.mailcow.email/install/\e[0m"
-    echo -e "\e[31mيرجى تثبيته وفقاً لهذه الوثائق: https://docs.mailcow.email/install/\e[0m"
+    echo -e "\e[31mPlease install it regarding to this doc site: https://docs.chertmail.com/install/\e[0m"
+    echo -e "\e[31mيرجى تثبيته وفقاً لهذه الوثائق: https://docs.chertmail.com/install/\e[0m"
     exit 1
   fi
 }

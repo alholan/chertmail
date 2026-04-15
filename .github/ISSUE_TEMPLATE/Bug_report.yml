@@ -1,5 +1,5 @@
-name: 🐞 Bug Report
-description: Report a reproducible bug for mailcow. (NOT to be used for support questions.)
+name: Bug Report
+description: Report a reproducible bug for CHERT Mail. (NOT to be used for support questions.)
 labels: ["bug"]
 body:
   - type: checkboxes
@@ -7,7 +7,7 @@ body:
       label: Contribution guidelines
       description: Please read the contribution guidelines before proceeding.
       options:
-      - label: I've read the [contribution guidelines](https://github.com/mailcow/mailcow-dockerized/blob/master/CONTRIBUTING.md) and wholeheartedly agree
+      - label: I've read the [contribution guidelines](https://github.com/alholan/chertmail/blob/master/CONTRIBUTING.md) and wholeheartedly agree
         required: true
   - type: checkboxes
     attributes:
@@ -22,14 +22,14 @@ body:
         required: true
       - label: I understand that all responses are voluntary and community-driven, and do not constitute commercial support.
         required: true
-      - label: I confirm that I have reviewed previous [issues](https://github.com/mailcow/mailcow-dockerized/issues) to ensure this matter has not already been addressed.
+      - label: I confirm that I have reviewed previous [issues](https://github.com/alholan/chertmail/issues) to ensure this matter has not already been addressed.
         required: true
-      - label: I confirm that my environment meets all [prerequisite requirements](https://docs.mailcow.email/getstarted/prerequisite-system/) as specified in the official documentation.
+      - label: I confirm that my environment meets all [prerequisite requirements](https://docs.chertmail.com/getstarted/prerequisite-system/) as specified in the official documentation.
         required: true
   - type: textarea
     attributes:
       label: Description
-      description: Please provide a brief description of the bug. If applicable, add screenshots to help explain your problem. (Very useful for bugs in mailcow UI.)
+      description: Please provide a brief description of the bug. If applicable, add screenshots to help explain your problem. (Very useful for bugs in CHERT Mail UI.)
     validations:
       required: true
   - type: textarea
@@ -45,7 +45,7 @@ body:
   - type: textarea
     attributes:
       label: "Logs:"
-      description: "Please take a look at the [official documentation](https://docs.mailcow.email/troubleshooting/debug-logs/) and post the last few lines of logs, when the error occurs. For example, docker container logs of affected containers. This will be automatically formatted into code, so no need for backticks."
+      description: "Please take a look at the [official documentation](https://docs.chertmail.com/troubleshooting/debug-logs/) and post the last few lines of logs, when the error occurs. For example, docker container logs of affected containers. This will be automatically formatted into code, so no need for backticks."
       render: plain text
     validations:
       required: true
@@ -60,9 +60,9 @@ body:
       description: "#### Run: `git rev-parse --abbrev-ref HEAD`"
       multiple: false
       options:
-        - master (stable)
+        - chert-v1.1 (stable)
+        - master
         - staging
-        - nightly
     validations:
       required: true
   - type: dropdown
@@ -110,16 +110,16 @@ body:
       required: true
   - type: input
     attributes:
-      label: "docker-compose version or docker compose version:"
-      description: "#### Run: `docker-compose version` or `docker compose version`"
+      label: "docker compose version:"
+      description: "#### Run: `docker compose version`"
       placeholder: "v2.12.2"
     validations:
       required: true
   - type: input
     attributes:
-      label: "mailcow version:"
+      label: "CHERT Mail version:"
       description: "#### Run: ```git describe --tags `git rev-list --tags --max-count=1` ```"
-      placeholder: "2022-08x"
+      placeholder: "2024-01"
     validations:
       required: true
   - type: input
@@ -131,7 +131,7 @@ body:
   - type: textarea
     attributes:
       label: "Logs of git diff:"
-      description: "#### Output of `git diff origin/master`, any other changes to the code? Sanitize if needed. If so, **please post them**:"
+      description: "#### Output of `git diff origin/chert-v1.1`, any other changes to the code? Sanitize if needed. If so, **please post them**:"
       render: plain text
     validations:
       required: false
@@ -166,7 +166,7 @@ body:
   - type: textarea
     attributes:
       label: "DNS check:"
-      description: "#### Output of `docker exec -it $(docker ps -qf name=acme-mailcow) dig +short stackoverflow.com @172.22.1.254` (set the IP accordingly, if you changed the internal mailcow network)"
+      description: "#### Output of `docker exec -it $(docker ps -qf name=acme-mailcow) dig +short stackoverflow.com @172.22.1.254` (set the IP accordingly, if you changed the internal network)"
       render: plain text
     validations:
       required: true

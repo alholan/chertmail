@@ -33,7 +33,7 @@ get_docker_version
 if [[ $docker_version -lt 24 ]]; then
   echo -e "\e[31mCannot find Docker with a Version higher or equals 24.0.0\e[0m"
   echo -e "\e[31mلم يتم العثور على Docker بإصدار 24.0.0 أو أعلى\e[0m"
-  echo -e "\e[33mmailcow needs a newer Docker version to work properly...\e[0m"
+  echo -e "\e[33mCHERT Mail needs a newer Docker version to work properly...\e[0m"
   echo -e "\e[33mتشيرت ميل يحتاج إصدار Docker أحدث ليعمل بشكل صحيح...\e[0m"
   echo -e "\e[31mPlease update your Docker installation... exiting\e[0m"
   echo -e "\e[31mيرجى تحديث تثبيت Docker... جارٍ الخروج\e[0m"
@@ -176,14 +176,14 @@ MAILCOW_HOSTNAME=${MAILCOW_HOSTNAME}
 
 # Password hash algorithm
 # Only certain password hash algorithm are supported. For a fully list of supported schemes,
-# see https://docs.mailcow.email/models/model-passwd/
+# see https://docs.chertmail.com/models/model-passwd/
 MAILCOW_PASS_SCHEME=BLF-CRYPT
 
 # ------------------------------
 # SQL database configuration
 # ------------------------------
-DBNAME=mailcow
-DBUSER=mailcow
+DBNAME=chertmail
+DBUSER=chertmail
 
 # Please use long, random alphanumeric strings (A-Za-z0-9)
 DBPASS=${MAILCOW_DBPASS:-$(LC_ALL=C </dev/urandom tr -dc A-Za-z0-9 2> /dev/null | head -c 28)}
@@ -205,7 +205,7 @@ REDISPASS=${MAILCOW_REDISPASS:-$(LC_ALL=C </dev/urandom tr -dc A-Za-z0-9 2> /dev
 # IMPORTANT: Do not use port 8081, 9081, 9082 or 65510!
 # Example: HTTP_BIND=1.2.3.4
 # For IPv4 leave it as it is: HTTP_BIND= & HTTPS_PORT=
-# For IPv6 see https://docs.mailcow.email/post_installation/firststeps-ip_bindings/
+# For IPv6 see https://docs.chertmail.com/post_installation/firststeps-ip_bindings/
 HTTP_PORT=80
 HTTP_BIND=
 
@@ -239,13 +239,13 @@ TZ=${MAILCOW_TZ}
 
 # Fixed project name
 # Please use lowercase letters only
-COMPOSE_PROJECT_NAME=mailcowdockerized
+COMPOSE_PROJECT_NAME=chertmail
 
 # Used Docker Compose version
 # Switch here between native (compose plugin) and standalone
-# For more information take a look at the mailcow docs regarding the configuration options.
+# For more information take a look at the CHERT Mail docs regarding the configuration options.
 # Normally this should be untouched but if you decided to use either of those you can switch it manually here.
-# Please be aware that at least one of those variants should be installed on your machine or mailcow will fail.
+# Please be aware that at least one of those variants should be installed on your machine or CHERT Mail will fail.
 DOCKER_COMPOSE_VERSION=${COMPOSE_VERSION}
 
 # Set this to "allow" to enable the anyone pseudo user. Disabled by default.
@@ -281,10 +281,10 @@ ADDITIONAL_SAN=
 # in the reverse proxy.
 AUTODISCOVER_SAN=y
 
-# Additional server names for mailcow UI
+# Additional server names for CHERT Mail UI
 #
-# Specify alternative addresses for the mailcow UI to respond to
-# This is useful when you set mail.* as ADDITIONAL_SAN and want to make sure mail.maildomain.com will always point to the mailcow UI.
+# Specify alternative addresses for the CHERT Mail UI to respond to
+# This is useful when you set mail.* as ADDITIONAL_SAN and want to make sure mail.maildomain.com will always point to the CHERT Mail UI.
 # If the server name does not match a known site, Nginx decides by best-guess and may redirect users to the wrong web root.
 # You can understand this as server_name directive in Nginx.
 # Comma separated list without spaces! Example: ADDITIONAL_SERVER_NAMES=a.b.c,d.e.f
@@ -365,7 +365,7 @@ USE_WATCHDOG=y
 #WATCHDOG_NOTIFY_WEBHOOK=https://discord.com/api/webhooks/XXXXXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # JSON body included in the webhook POST request. Needs to be in single quotes.
 # Following variables are available: SUBJECT, BODY
-#WATCHDOG_NOTIFY_WEBHOOK_BODY='{"username": "mailcow Watchdog", "content": "**${SUBJECT}**\n${BODY}"}'
+#WATCHDOG_NOTIFY_WEBHOOK_BODY='{"username": "CHERT Mail Watchdog", "content": "**${SUBJECT}**\n${BODY}"}'
 
 # Notify about banned IP (includes whois lookup)
 WATCHDOG_NOTIFY_BAN=n

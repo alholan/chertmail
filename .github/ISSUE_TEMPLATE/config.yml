@@ -1,11 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: ❓ Community-driven support (Free)
-    url: https://docs.mailcow.email/#community-support-and-chat
-    about: Please use the community forum for questions or assistance
-  - name: 🔥 Premium Support (Paid)
-    url: https://www.servercow.de/mailcow?lang=en#support
-    about: Buy a support subscription for any critical issues and get assisted by the mailcow Team. See conditions!
-  - name: 🚨 Report a security vulnerability
-    url: "mailto:info@servercow.de?subject=mailcow: dockerized Security Vulnerability"
+  - name: Documentation
+    url: https://docs.chertmail.com/
+    about: Please check the documentation for answers to common questions
+  - name: Report a security vulnerability
+    url: https://github.com/alholan/chertmail/security/advisories/new
     about: Please give us appropriate time to verify, respond and fix before disclosure.

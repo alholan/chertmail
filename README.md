@@ -1,61 +1,39 @@
-# mailcow: dockerized - 🐮 + 🐋 = 💕
+# CHERT Mail - Enterprise Email Server
 
-[![Translation status](https://translate.mailcow.email/widgets/mailcow-dockerized/-/translation/svg-badge.svg)](https://translate.mailcow.email/engage/mailcow-dockerized/)
-[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/mailcow_email.svg?style=social&label=Follow%20%40mailcow_email)](https://twitter.com/mailcow_email)
-![Mastodon Follow](https://img.shields.io/mastodon/follow/109388212176073348?domain=https%3A%2F%2Fmailcow.social&label=Follow%20%40doncow%40mailcow.social&link=https%3A%2F%2Fmailcow.social%2F%40doncow)
+CHERT Mail is a fully-featured email server solution based on [mailcow](https://mailcow.email), customized for the Saudi Arabian market with Arabic language support.
 
+## Features
 
-## Want to support mailcow?
+- Complete email server stack with web UI
+- Arabic and English bilingual interface
+- Let's Encrypt SSL certificate automation
+- Docker-based deployment
+- Webmail (SOGo), CalDAV, CardDAV support
+- Anti-spam (Rspamd) and antivirus (ClamAV)
+- DKIM, SPF, DMARC support
 
-Please [consider a support contract with Servercow](https://www.servercow.de/mailcow?lang=en#support) to support further development. _We_ support _you_ while _you_ support _us_. :)
+## Quick Start
 
-You can also [get a SAL](https://www.servercow.de/mailcow?lang=en#sal) which is a one-time payment with no liabilities or returning fees.
+```bash
+git clone https://github.com/alholan/chertmail.git /opt/chertmail
+cd /opt/chertmail
+./generate_config.sh
+```
 
-Or just spread the word: moo.
+## Documentation
 
-## Many thanks to our GitHub Sponsors ❤️
-A big thank you to everyone supporting us on GitHub Sponsors—your contributions mean the world to us! Special thanks to the following amazing supporters:
+Please see [the official documentation](https://docs.chertmail.com/) for installation and support instructions.
 
-### 100$/Month Sponsors
-  <a href="https://www.colba.net/" target=_blank><img
-    src="https://avatars.githubusercontent.com/u/204464723" height="58"
-  /></a>
-  <a href="https://www.maehdros.com/" target=_blank><img
-    src="https://avatars.githubusercontent.com/u/173894712" height="58"
-  /></a>
+## Attribution
 
-### 50$/Month Sponsors
-  <a href="https://github.com/vnukhr" target=_blank><img
-    src="https://avatars.githubusercontent.com/u/7805987?s=52&v=4" height="58"
-  /></a>
+CHERT Mail is based on [mailcow: dockerized](https://github.com/mailcow/mailcow-dockerized), an open-source email server solution.
 
-## Info, documentation and support
+- Original project: [mailcow](https://mailcow.email)
+- Original maintainers: The Infrastructure Company GmbH
+- mailcow is a registered trademark of The Infrastructure Company GmbH
 
-Please see [the official documentation](https://docs.mailcow.email/) for installation and support instructions. 🐄
+## License
 
-🐛 **If you found a critical security issue, please mail us to [info at servercow.de](mailto:info@servercow.de).**
+This project is released under **GNU General Public License, Version 3**, same as the original mailcow project.
 
-## Cowmunity
-
-[mailcow community](https://community.mailcow.email)
-
-[Telegram mailcow channel](https://telegram.me/mailcow)
-
-[Telegram mailcow Off-Topic channel](https://t.me/mailcowOfftopic)
-
-[Official 𝕏 (Twitter) Account](https://twitter.com/mailcow_email)
-
-[Official Mastodon Account](https://mailcow.social/@doncow)
-
-Telegram desktop clients are available for [multiple platforms](https://desktop.telegram.org). You can search the groups history for keywords.
-
-## Misc
-
-**Important**: mailcow makes use of various open-source software. Please assure you agree with their license before using mailcow.
-Any part of mailcow itself is released under **GNU General Public License, Version 3**.
-
-mailcow is a registered word mark of The Infrastructure Company GmbH, Parkstr. 42, 47877 Willich, Germany.
-
-The project is managed and maintained by The Infrastructure Company GmbH.
-
-Originated from @andryyy (André)
+**Important**: CHERT Mail makes use of various open-source software. Please ensure you agree with their licenses before using CHERT Mail.

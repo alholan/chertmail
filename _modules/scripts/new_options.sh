@@ -227,14 +227,14 @@ adapt_new_options() {
         MAILCOW_PASS_SCHEME)
             echo '# Password hash algorithm' >> chertmail.conf
             echo '# Only certain password hash algorithm are supported. For a fully list of supported schemes,' >> chertmail.conf
-            echo '# see https://docs.mailcow.email/models/model-passwd/' >> chertmail.conf
+            echo '# see https://docs.chertmail.com/models/model-passwd/' >> chertmail.conf
             echo "MAILCOW_PASS_SCHEME=BLF-CRYPT" >> chertmail.conf
             ;;
         ADDITIONAL_SERVER_NAMES)
-            echo '# Additional server names for mailcow UI' >> chertmail.conf
+            echo '# Additional server names for CHERT Mail UI' >> chertmail.conf
             echo '#' >> chertmail.conf
-            echo '# Specify alternative addresses for the mailcow UI to respond to' >> chertmail.conf
-            echo '# This is useful when you set mail.* as ADDITIONAL_SAN and want to make sure mail.maildomain.com will always point to the mailcow UI.' >> chertmail.conf
+            echo '# Specify alternative addresses for the CHERT Mail UI to respond to' >> chertmail.conf
+            echo '# This is useful when you set mail.* as ADDITIONAL_SAN and want to make sure mail.maildomain.com will always point to the CHERT Mail UI.' >> chertmail.conf
             echo '# If the server name does not match a known site, Nginx decides by best-guess and may redirect users to the wrong web root.' >> chertmail.conf
             echo '# You can understand this as server_name directive in Nginx.' >> chertmail.conf
             echo '# Comma separated list without spaces! Example: ADDITIONAL_SERVER_NAMES=a.b.c,d.e.f' >> chertmail.conf
